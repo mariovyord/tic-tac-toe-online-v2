@@ -1,4 +1,4 @@
-import { Component, SyntheticEvent } from 'react'
+import { Component } from 'react'
 import navStyles from './Nav.module.css';
 import NavList from './NavList/NavList';
 
@@ -19,7 +19,7 @@ export default class Nav extends Component<IProps, IState> {
 		}
 	}
 
-	toggleHamburger(e: SyntheticEvent): void {
+	toggleHamburger() {
 		this.setState((previousState, props) => ({
 			toggle: !previousState.toggle,
 		}));
