@@ -1,0 +1,141 @@
+@import '../../css/variables.css';
+
+.wrapper {
+	background-color: var(--nav-bg-color);
+	height: 50px;
+}
+
+nav {
+	margin: 0 auto;
+	display: flex;
+	justify-content: end;
+	align-content: center;
+	align-items: center;
+	max-width: 1024px;
+	padding: 0 10px;
+	height: 100%;
+	color: white;
+}
+
+.logo {
+	display: block;
+}
+
+.logo img {
+	width: 33px;
+}
+
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+li {
+	display: inline-block;
+	padding: 0 1rem;
+}
+
+a {
+	color: inherit;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 50px;
+	width: 50px;
+	text-decoration: none;
+	border: 3px solid transparent;
+}
+
+.navbar a:hover {
+	border-bottom: 3px solid var(--pink);
+}
+
+.navbar a.active {
+	border-bottom: 3px solid var(--pink);
+}
+
+/* Hamburger Menu */
+.hamburger-icon {
+	box-sizing: border-box;
+	margin: auto 0;
+	display: none;
+	cursor: pointer;
+}
+
+.hamburger-icon div {
+	width: 30px;
+	height: 2px;
+	background-color: white;
+	margin: 6px 0;
+	transition: 0.4s;
+}
+
+/* Hamburger Animation */
+.open .bar1 {
+	-webkit-transform: rotate(-45deg) translate(-6px, 6px);
+	transform: rotate(-45deg) translate(-6px, 6px);
+}
+
+.open .bar2 {
+	opacity: 0;
+}
+
+.open .bar3 {
+	-webkit-transform: rotate(45deg) translate(-6px, -6px);
+	transform: rotate(45deg) translate(-6px, -6px);
+}
+
+.open .mobile-menu {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.mobile-menu {
+	display: none;
+	position: absolute;
+	top: 50px;
+	left: 0;
+	width: 100%;
+	height: calc(100vh - 100px);
+	padding-top: 50px;
+	background-color: var(--nav-bg-color);
+}
+
+.mobile-menu li {
+	padding: 10px;
+}
+
+.mobile-menu a {
+	text-align: center;
+	display: block;
+	min-width: 100px;
+	border-radius: 10%;
+	padding: 10px;
+	text-decoration: none;
+}
+
+.mobile-menu a.active {
+	text-decoration: underline;
+}
+
+.mobile-menu a:hover {
+	color: orange;
+}
+
+.mobile-menu a.danger {
+	color: red;
+}
+
+@media (max-width: 700px) {
+	.navbar {
+		display: none;
+	}
+
+	.hamburger-icon {
+		display: block;
+	}
+}
