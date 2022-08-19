@@ -1,7 +1,7 @@
 import style from './History.module.css';
 
 interface IHistory {
-	historyArray: string[],
+	historyArray: string[][],
 	handleHistoryJump: Function,
 }
 
