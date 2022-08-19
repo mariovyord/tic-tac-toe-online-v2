@@ -1,0 +1,51 @@
+@import '../../css/variables.css';
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--main-bg-color);
+	width: 100%;
+	min-height: 100vh;
+}
+
+.board {
+	padding: 1rem;
+	z-index: 100;
+}
+
+.heading {
+	font-size: 15vw;
+	font-weight: bold;
+}
+
+.welcome {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	color: var(--green);
+	z-index: 0;
+}
+
+.login-btn {
+	color: black;
+	font-size: 1.1rem;
+	width: 100%;
+	padding: 1rem 4rem;
+	margin: 10px 0;
+	display: flex;
+	gap: 10px;
+}
+
+.login-btn:hover {
+	opacity: 0.9;
+}
+
+.white-bg {
+	background-color: white;
+}
+
+.yellow-bg {
+	background-color: rgb(199, 199, 57);
+}

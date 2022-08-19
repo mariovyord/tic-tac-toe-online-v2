@@ -1,0 +1,25 @@
+@import '../../css/variables.css';
+
+.footer {
+	width: 100%;
+	padding: 1rem;
+	background-color: var(--nav-bg-color);
+}
+
+.links {
+	width: 100%;
+	color: white;
+	margin-bottom: 1rem;
+}
+
+.links a {
+	width: fit-content;
+	margin: 0 auto;
+}
+
+.copyright {
+	width: 100%;
+	text-align: center;
+	color: white;
+	font-size: 0.9rem;
+}

@@ -26,9 +26,6 @@ nav {
 }
 
 ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
 	overflow: hidden;
 }
 
@@ -43,7 +40,6 @@ a {
 	justify-content: center;
 	align-items: center;
 	height: 50px;
-	width: 50px;
 	text-decoration: none;
 	border: 3px solid transparent;
 }
