@@ -13,7 +13,6 @@ export class Home extends Component {
 						<div><GiMicrochip size={'100px'} /></div>
 						<div>Play vs Artificial Intelligence</div>
 					</Link>
-					<div className={styles['middle-line']}></div>
 					<Link className={styles['game-link']} to="/game/PvP">
 						<GiHumanTarget size={'100px'} />
 						<div></div>

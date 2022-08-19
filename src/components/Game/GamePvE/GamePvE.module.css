@@ -3,6 +3,7 @@
 	align-items: center;
 	flex-direction: column;
 	background-color: var(--main-bg-color);
+	min-height: calc(100vh - 170px);
 }
 
 .game {

@@ -3,6 +3,7 @@
 .wrapper {
 	background-color: var(--nav-bg-color);
 	height: 50px;
+	border-bottom: 1px solid white;
 }
 
 nav {
@@ -11,7 +12,6 @@ nav {
 	justify-content: end;
 	align-content: center;
 	align-items: center;
-	max-width: 1024px;
 	padding: 0 10px;
 	height: 100%;
 	color: white;
