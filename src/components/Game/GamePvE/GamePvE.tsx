@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import Cell from '../gameComponents/Cell/Cell';
 import History from '../gameComponents/History/History';
 import NewGameButton from '../gameComponents/NewGamebutton/NewGameButton';
+import PlayerCard from '../gameComponents/PlayerCard/PlayerCard';
 import Winner from '../gameComponents/Winner/Winner';
 
 import style from './GamePvE.module.css';
@@ -109,6 +110,12 @@ export default class GamePvE extends Component<any, IState> {
 	render() {
 		return (
 			<div className={`${style.container}`}>
+				<div className={style.player1}>
+					<PlayerCard playerName='Mario' />
+				</div>
+				<div className={style.player2}>
+					<PlayerCard playerName='Super AI' />
+				</div>
 				<div className={style.game}>
 					<table>
 						<tbody>

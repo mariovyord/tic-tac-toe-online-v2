@@ -3,7 +3,6 @@
 .wrapper {
 	background-color: var(--nav-bg-color);
 	height: 50px;
-	border-bottom: 1px solid white;
 }
 
 nav {

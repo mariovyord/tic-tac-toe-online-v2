@@ -1,16 +1,43 @@
 .container {
-	display: flex;
-	align-items: center;
-	flex-direction: column;
+	display: grid;
+	grid-template-columns: auto 350px auto;
+	grid-template-areas: "player1 game player2";
 	background-color: var(--main-bg-color);
 	min-height: calc(100vh - 170px);
+	padding: 2rem 0;
+}
+
+@media screen and (max-width: 768px) {
+	.container {
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			"game"
+			"player1"
+			"player2";
+	}
+}
+
+.player1 {
+	grid-area: player1;
+	display: flex;
+	justify-content: center;
+	padding: 0 2rem;
+}
+
+.player2 {
+	grid-area: player2;
+	display: flex;
+	justify-content: center;
+	padding: 0 2rem;
 }
 
 .game {
+	grid-area: game;
 	max-width: 400px;
 	display: flex;
 	align-items: center;
 	flex-direction: column;
+	margin: 0 auto;
 }
 
 .menu {
@@ -34,7 +61,6 @@ table td {
 	font-weight: bold;
 	text-align: center;
 	font-size: 4rem;
-	border-radius: 10px;
 	vertical-align: middle;
 }
 
