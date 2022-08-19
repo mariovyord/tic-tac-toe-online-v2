@@ -7,7 +7,6 @@ export default class NavList extends Component {
 		return (
 			<>
 				<li><NavLink to="/" >Home</NavLink></li>
-				<li><NavLink to="/tic-tac-toe" >Game</NavLink></li>
 				<li><NavLink to="/profile" >Profile</NavLink></li>
 			</>
 		)
