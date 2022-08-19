@@ -1,0 +1,6 @@
+.history-button {
+	background-color: var(--main-bg-color);
+	color: white;
+	font-weight: bold;
+	padding: 3px 5px;
+}

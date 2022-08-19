@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ICell {
 	cellId: number,
 	current: string,
@@ -8,11 +6,9 @@ interface ICell {
 }
 
 const Cell: React.FC<ICell> = ({ cellId, current, handleClick, isWinning }) => {
-	return (
-		<td className={isWinning[cellId] ? 'winning-cell' : ''} onClick={() => handleClick(cellId)}>
-			<span>{current[cellId]} </span>
-		</td >
-	)
+	return <td className={isWinning[cellId] ? 'winning-cell' : ''} onClick={() => handleClick(cellId)}>
+		<span>{current[cellId]}</span>
+	</td>
 }
 
 export default Cell;
