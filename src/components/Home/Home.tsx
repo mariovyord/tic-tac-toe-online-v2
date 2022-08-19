@@ -9,12 +9,12 @@ export class Home extends Component {
 		return (
 			<div className={styles.wrapper}>
 				<div className={styles.games}>
-					<Link className={styles['game-link']} to="/game/computer">
+					<Link className={styles['game-link']} to="/game/PvE">
 						<div><GiMicrochip size={'100px'} /></div>
 						<div>Play vs Artificial Intelligence</div>
 					</Link>
 					<div className={styles['middle-line']}></div>
-					<Link className={styles['game-link']} to="/game/computer">
+					<Link className={styles['game-link']} to="/game/PvP">
 						<GiHumanTarget size={'100px'} />
 						<div></div>
 						<div>

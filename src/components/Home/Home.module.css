@@ -20,13 +20,15 @@
 	height: 100%;
 	font-size: 1.5rem;
 	padding: 1rem;
-	transition: background-color 0.2s;
+	transition: background-color 0.3s;
+	transition: font-size 0.3s;
 	transition-timing-function: ease-in-out;
 }
 
 .game-link:hover {
 	background-color: var(--green);
 	color: black;
+	font-size: 2rem;
 }
 
 .middle-line {
