@@ -22,5 +22,23 @@
 }
 
 .turn {
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 1.5rem;
 	text-align: center;
+}
+
+.turn-card {
+	margin-top: 1rem;
+	border: 1px solid white;
+	opacity: 0.3;
+	padding: 0.5rem 0.5rem 0.6rem 0.5rem;
+	background-color: var(--main-bg-color);
+}
+
+.active {
+	border: 1px solid var(--green);
+	opacity: 1;
+	color: var(--green);
+	box-shadow: 0px 0px 20px 10px var(--green);
 }

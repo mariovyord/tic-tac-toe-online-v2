@@ -111,10 +111,10 @@ export default class GamePvE extends Component<any, IState> {
 		return (
 			<div className={`${style.container}`}>
 				<div className={style.player1}>
-					<PlayerCard playerName='Mario' />
+					<PlayerCard playerName='Mario' yourTurn={this.state.turn === 'x'} />
 				</div>
 				<div className={style.player2}>
-					<PlayerCard playerName='Super AI' />
+					<PlayerCard playerName='Super AI' yourTurn={this.state.turn === 'o'} />
 				</div>
 				<div className={style.game}>
 					<table>
