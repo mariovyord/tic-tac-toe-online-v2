@@ -8,10 +8,10 @@ interface IWinner {
 
 const Winner: React.FC<IWinner> = ({ winner, handleRestartGame }) => {
 	return (
-		<>
+		<div className={style['win-modal']}>
 			<h2 className={style.win}>{winner} is the winner!</h2>
 			<NewGameButton handleRestartGame={handleRestartGame} />
-		</>
+		</div>
 	)
 }
 

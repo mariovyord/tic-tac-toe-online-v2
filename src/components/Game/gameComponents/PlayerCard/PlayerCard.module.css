@@ -11,7 +11,6 @@
 .player-card {
 	background-color: var(--main-bg-color);
 	width: 200px;
-	height: 100px;
 }
 
 .player-name {

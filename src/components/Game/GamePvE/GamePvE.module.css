@@ -9,6 +9,7 @@
 
 @media screen and (max-width: 768px) {
 	.container {
+		gap: 2rem;
 		grid-template-columns: 1fr;
 		grid-template-areas:
 			"game"
