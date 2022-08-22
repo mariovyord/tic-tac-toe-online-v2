@@ -1,7 +1,5 @@
 // give sign and tic tac toe array to ai and it will play a move
-
-type TSigns = 'x' | 'o' | undefined;
-export type TGameArray = TSigns[];
+import { TSigns, TGameArray } from '../../types/game.types'
 
 const ai = (sign: TSigns, gameArray: any[]): TGameArray => {
 	const arr = [...gameArray];

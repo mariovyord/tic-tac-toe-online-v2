@@ -1,10 +1,6 @@
 import React, { Component, createContext } from 'react'
 import { Navigate } from 'react-router-dom';
-
-type TUserData = {
-	_id: string,
-	firstName: string,
-}
+import { TUserData } from '../types/user.types';
 
 interface IProps {
 	children: React.ReactNode

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import style from './PlayerCard.module.css';
+import { TUserData } from '../../../../types/user.types';
 
-type TUserData = {
-	_id: string,
-	firstName: string,
-}
 interface Props {
 	userData: TUserData;
 	sign: 'x' | 'o',

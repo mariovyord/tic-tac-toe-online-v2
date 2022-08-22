@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
 import { AuthContext } from '../../../contexts/AuthContext';
-import ai, { TGameArray } from '../../../utils/ai/ai';
+import ai from '../../../utils/ai/ai';
+
+import { TUserData } from '../../../types/user.types';
 
 import GameTable from '../gameComponents/GameTable';
 import PlayerCard from '../gameComponents/PlayerCard/PlayerCard';
 import Winner from '../gameComponents/Winner/Winner';
 
 import style from './GamePvE.module.css';
-
-type TUserData = {
-	_id: string,
-	firstName: string,
-}
+import { TGameArray, THistoryArray } from '../../../types/game.types';
 
 interface IState {
 	userData: TUserData,
@@ -20,7 +18,7 @@ interface IState {
 	computerSign: 'x' | 'o',
 	turn: string,
 	winner: undefined | 'win' | 'lose' | 'draw',
-	history: any[][],
+	history: THistoryArray,
 	step: number,
 	winningSquares: boolean[],
 }
@@ -124,7 +122,7 @@ export default class GamePvE extends Component<any, IState> {
 	}
 
 	handleClick = (num: number) => {
-		const current = this.state.history[this.state.step];
+		const current: TGameArray = this.state.history[this.state.step];
 
 		if (this.state.step !== (this.state.history.length - 1) || this.state.step < 0) return;
 		if (this.state.winner !== undefined) return;
@@ -133,7 +131,7 @@ export default class GamePvE extends Component<any, IState> {
 
 		const handleTurn = (): any => {
 			// add user move to array
-			let playersSquares = [...current];
+			let playersSquares: TGameArray = [...current];
 			playersSquares[num] = this.state.userSign;
 			// add computer move to second array
 			const computerSquares = ai(this.state.computerSign, playersSquares);
