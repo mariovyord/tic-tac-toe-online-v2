@@ -60,9 +60,6 @@ export default class GamePvE extends Component<any, IState> {
 			computerSign: sign2,
 		});
 
-		console.log('computerSign', sign1);
-		console.log('userSign', sign2);
-
 		// check if AI is first and make a move if it is
 		setTimeout(() => {
 			if (this.state.turn === this.state.computerSign && this.state.history.length === 1) {
@@ -172,13 +169,29 @@ export default class GamePvE extends Component<any, IState> {
 	}
 
 	handleRestartGame = () => {
-		return this.setState({
+		const sign1 = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
+		const sign2 = sign1 === 'x' ? 'o' : 'x';
+
+		this.setState({
 			turn: 'x',
 			winner: undefined,
+			userData: this.context.userData,
+			userSign: sign1,
+			computerSign: sign2,
 			history: [Array(9).fill(undefined)],
 			step: 0,
 			winningSquares: Array(9).fill(false),
 		})
+
+		// check if AI is first and make a move if it is
+		setTimeout(() => {
+			if (this.state.turn === this.state.computerSign && this.state.history.length === 1) {
+				const newHistory = [...this.state.history];
+				const computerMove = ai(this.state.computerSign, newHistory[0]);
+				this.computerMove(newHistory, computerMove);
+			}
+		}, 500)
+
 	}
 	render() {
 		return (
