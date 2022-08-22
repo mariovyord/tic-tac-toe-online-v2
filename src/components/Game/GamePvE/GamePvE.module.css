@@ -1,6 +1,6 @@
 .container {
 	display: grid;
-	grid-template-columns: auto 350px auto;
+	grid-template-columns: 1fr 1fr 1fr;
 	grid-template-areas: "player1 game player2";
 	background-color: var(--main-bg-color);
 	min-height: calc(100vh - 170px);
@@ -33,7 +33,7 @@
 
 .game {
 	grid-area: game;
-	max-width: 400px;
+	width: 100%;
 	display: flex;
 	align-items: center;
 	flex-direction: column;
@@ -52,25 +52,7 @@
 table {
 	border-collapse: separate;
 	border-spacing: 15px 15px;
-}
-
-table td {
-	box-shadow: 0px 0px 20px 10px var(--blue);
-	width: 100px;
-	height: 100px;
-	font-weight: bold;
-	text-align: center;
-	font-size: 4rem;
-	vertical-align: middle;
-}
-
-table td {
-	cursor: pointer;
-}
-
-table td span {
-	display: block;
-	padding-bottom: 20px;
+	width: 100%;
 }
 
 button,

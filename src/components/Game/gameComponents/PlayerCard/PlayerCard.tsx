@@ -3,6 +3,7 @@ import style from './PlayerCard.module.css'
 
 interface Props {
 	playerName: string;
+	sign: 'x' | 'o',
 	yourTurn: boolean,
 };
 
@@ -14,6 +15,7 @@ export default class PlayerCard extends Component<Props> {
 				<div className={`${style['turn-card']} ${this.props.yourTurn ? style.active : null}`}>
 					<p className={`${style['turn']}`}>your turn</p>
 				</div>
+				<div className={style.sign}>{this.props.sign}</div>
 			</div>
 		)
 	}
