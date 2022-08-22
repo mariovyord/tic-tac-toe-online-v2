@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { AuthContext } from '../../../contexts/AuthContext';
+import ai, { TGameArray } from '../../../utils/ai/ai';
 
 import GameTable from '../gameComponents/GameTable';
 import PlayerCard from '../gameComponents/PlayerCard/PlayerCard';
@@ -6,18 +8,40 @@ import Winner from '../gameComponents/Winner/Winner';
 
 import style from './GamePvE.module.css';
 
+type TUserData = {
+	_id: string,
+	firstName: string,
+}
+
 interface IState {
+	userData: TUserData,
+	userSign: 'x' | 'o',
+	computerData: TUserData,
+	computerSign: 'x' | 'o',
 	turn: string,
 	winner: undefined | string,
-	history: string[][],
+	history: any[][],
 	step: number,
 	winningSquares: boolean[],
 }
 
 export default class GamePvE extends Component<any, IState> {
+	static contextType = AuthContext;
+	context!: React.ContextType<typeof AuthContext>;
+
 	constructor(props: any) {
 		super(props);
 		this.state = {
+			userData: {
+				_id: '',
+				firstName: '',
+			},
+			userSign: 'x',
+			computerData: {
+				_id: 'super-ai',
+				firstName: 'AI',
+			},
+			computerSign: 'o',
 			turn: 'x',
 			winner: undefined,
 			history: [Array(9).fill(undefined)],
@@ -26,7 +50,35 @@ export default class GamePvE extends Component<any, IState> {
 		}
 	}
 
-	checkForWinner = (squares: string[]) => {
+	componentDidMount() {
+		const sign1 = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
+		const sign2 = sign1 === 'x' ? 'o' : 'x';
+
+		this.setState({
+			userData: this.context.userData,
+			userSign: sign1,
+			computerSign: sign2,
+		});
+
+		console.log('computerSign', sign1);
+		console.log('userSign', sign2);
+
+		// check if AI is first and make a move if it is
+		setTimeout(() => {
+			if (this.state.turn === this.state.computerSign) {
+				const newHistory = [...this.state.history];
+				const computerMove = ai(this.state.computerSign, newHistory[0]);
+				console.log(computerMove);
+				this.computerMove(newHistory, computerMove);
+			}
+		}, 500)
+	}
+
+	componentDidUpdate() {
+
+	}
+
+	checkForWinner = (squares: []) => {
 		const combos = [
 			[0, 1, 2],
 			[3, 4, 5],
@@ -60,40 +112,56 @@ export default class GamePvE extends Component<any, IState> {
 		});
 	}
 
+	computerMove(history: any[][], computerSquares: any) {
+		const newHistory = [...history];
+		newHistory.push(computerSquares);
+
+		this.setState((state, _) => ({
+			turn: state.userSign,
+			history: newHistory,
+			step: state.step + 1,
+		}))
+
+		this.checkForWinner(computerSquares);
+	}
+
 	handleClick = (num: number) => {
 		const current = this.state.history[this.state.step];
 
 		if (this.state.step !== (this.state.history.length - 1) || this.state.step < 0) return;
-		if (current[num] !== undefined) return;
 		if (this.state.winner !== undefined) return;
+		if (this.state.turn === this.state.userSign && current[num] !== undefined) return;
+		if (this.state.turn === this.state.computerSign) return;
 
-		const handleTurn = () => {
-			let squares = [...current];
-			if (this.state.turn === 'x') {
-				squares[num] = 'x';
-				this.setState({
-					turn: 'o'
-				})
-			} else {
-				squares[num] = 'o';
-				this.setState({
-					turn: 'x'
-				})
-			}
-			return squares;
+		const handleTurn = (): any => {
+			// add user move to array
+			let playersSquares = [...current];
+			playersSquares[num] = this.state.userSign;
+			// add computer move to second array
+			const computerSquares = ai(this.state.computerSign, playersSquares);
+
+			return [playersSquares, computerSquares];
 		}
 
-		const currentGameState = handleTurn();
+		const [playersSquares, computerSquares] = handleTurn();
 
+		// Player makes a move after little delay
 		const newHistory = [...this.state.history];
-		newHistory.push(currentGameState);
 
-		this.setState({
+		newHistory.push(playersSquares);
+
+		this.setState((state, _) => ({
+			turn: state.computerSign,
 			history: newHistory,
-			step: this.state.step + 1,
-		})
+			step: state.step + 1,
+		}))
 
-		this.checkForWinner(currentGameState);
+		this.checkForWinner(playersSquares);
+
+		// AI makes a move after little delay
+		setTimeout(() => {
+			this.computerMove(newHistory, computerSquares);
+		}, 500)
 	}
 
 	handleRestartGame = () => {
@@ -109,10 +177,10 @@ export default class GamePvE extends Component<any, IState> {
 		return (
 			<div className={`${style.container}`}>
 				<div className={style.player1}>
-					<PlayerCard playerName='Mario' sign={'x'} yourTurn={this.state.turn === 'x'} />
+					<PlayerCard userData={this.state.userSign === 'x' ? this.state.userData : this.state.computerData} sign={'x'} yourTurn={this.state.turn === 'x'} />
 				</div>
 				<div className={style.player2}>
-					<PlayerCard playerName='AI' sign={'o'} yourTurn={this.state.turn === 'o'} />
+					<PlayerCard userData={this.state.userSign === 'o' ? this.state.userData : this.state.computerData} sign={'o'} yourTurn={this.state.turn === 'o'} />
 				</div>
 				<div className={style.game}>
 					<GameTable winningSquares={this.state.winningSquares} history={this.state.history} step={this.state.step} handleClick={this.handleClick} />
