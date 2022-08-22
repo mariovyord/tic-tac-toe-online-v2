@@ -8,9 +8,20 @@ interface ICell {
 }
 
 const Cell: React.FC<ICell> = ({ cellId, current, handleClick, winningSquares }) => {
-	return <td className={winningSquares[cellId] ? styles['winning-cell'] : ''} onClick={() => handleClick(cellId)}>
-		<span>{current[cellId]}</span>
-	</td>
+	if (current[cellId] === 'x') {
+		return <td className={`${winningSquares[cellId] ? styles['winning-cell'] : ''} ${styles['cell-x']} ${styles['cell']}`} onClick={() => handleClick(cellId)}>
+			<span></span>
+		</td>
+	} else if (current[cellId] === 'o') {
+		return <td className={`${winningSquares[cellId] ? styles['winning-cell'] : ''} ${styles['cell-o']} ${styles.cell}`} onClick={() => handleClick(cellId)}>
+			<span></span>
+		</td>
+
+	} else {
+		return <td className={`${winningSquares[cellId] ? styles['winning-cell'] : ''}  ${styles.cell}`} onClick={() => handleClick(cellId)}>
+			<span></span>
+		</td>
+	}
 }
 
 export default Cell;

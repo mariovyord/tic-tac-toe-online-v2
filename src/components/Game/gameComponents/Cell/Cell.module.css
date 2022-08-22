@@ -1,3 +1,61 @@
 .winning-cell {
 	background-color: var(--green);
 }
+
+/* Keep cells square */
+.cell {
+	position: relative;
+	width: 33.333%;
+	font-size: 4rem;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+	box-shadow: 0px 0px 20px 10px var(--blue);
+	cursor: pointer;
+}
+
+.cell:after {
+	content: '';
+	display: block;
+	margin-top: 100%;
+}
+
+.cell span {
+	position: absolute;
+	top: 50%;
+	margin-top: -35%;
+	bottom: 50%;
+	left: 0;
+	right: 0;
+}
+
+/* X Styles */
+.cell-x span::before,
+.cell-x span::after {
+	position: absolute;
+	top: 90%;
+	left: 0;
+	content: '';
+	width: 100%;
+	height: 10px;
+	background-color: white;
+}
+
+.cell-x span::before {
+	transform: rotate(45deg);
+}
+
+.cell-x span::after {
+	transform: rotate(-45deg);
+}
+
+/* o Styles */
+.cell-o span {
+	position: absolute;
+	top: 40%;
+	left: 4%;
+	border: 10px solid white;
+	border-radius: 100%;
+	width: 90%;
+	height: 90%;
+}

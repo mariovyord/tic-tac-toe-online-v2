@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
-import Cell from '../gameComponents/Cell/Cell';
-import History from '../gameComponents/History/History';
-import NewGameButton from '../gameComponents/NewGamebutton/NewGameButton';
+import GameTable from '../gameComponents/GameTable';
 import PlayerCard from '../gameComponents/PlayerCard/PlayerCard';
 import Winner from '../gameComponents/Winner/Winner';
 
@@ -111,37 +109,16 @@ export default class GamePvE extends Component<any, IState> {
 		return (
 			<div className={`${style.container}`}>
 				<div className={style.player1}>
-					<PlayerCard playerName='Mario' yourTurn={this.state.turn === 'x'} />
+					<PlayerCard playerName='Mario' sign={'x'} yourTurn={this.state.turn === 'x'} />
 				</div>
 				<div className={style.player2}>
-					<PlayerCard playerName='Super AI' yourTurn={this.state.turn === 'o'} />
+					<PlayerCard playerName='AI' sign={'o'} yourTurn={this.state.turn === 'o'} />
 				</div>
 				<div className={style.game}>
-					<table>
-						<tbody>
-							<tr>
-								<Cell winningSquares={this.state.winningSquares} current={this.state.history[this.state.step]} handleClick={this.handleClick} cellId={0} />
-								<Cell winningSquares={this.state.winningSquares} current={this.state.history[this.state.step]} handleClick={this.handleClick} cellId={1} />
-								<Cell winningSquares={this.state.winningSquares} current={this.state.history[this.state.step]} handleClick={this.handleClick} cellId={2} />
-							</tr>
-							<tr>
-								<Cell winningSquares={this.state.winningSquares} current={this.state.history[this.state.step]} handleClick={this.handleClick} cellId={3} />
-								<Cell winningSquares={this.state.winningSquares} current={this.state.history[this.state.step]} handleClick={this.handleClick} cellId={4} />
-								<Cell winningSquares={this.state.winningSquares} current={this.state.history[this.state.step]} handleClick={this.handleClick} cellId={5} />
-							</tr>
-							<tr>
-								<Cell winningSquares={this.state.winningSquares} current={this.state.history[this.state.step]} handleClick={this.handleClick} cellId={6} />
-								<Cell winningSquares={this.state.winningSquares} current={this.state.history[this.state.step]} handleClick={this.handleClick} cellId={7} />
-								<Cell winningSquares={this.state.winningSquares} current={this.state.history[this.state.step]} handleClick={this.handleClick} cellId={8} />
-							</tr>
-						</tbody>
-					</table>
-					<div className={style.menu}>
-						{this.state.winner && <Winner winner={this.state.winner} />}
-						<NewGameButton handleRestartGame={this.handleRestartGame} />
-						<h3>History:</h3>
-						<History historyArray={this.state.history} handleHistoryJump={this.handleHistoryJump} />
-					</div>
+					<GameTable winningSquares={this.state.winningSquares} history={this.state.history} step={this.state.step} handleClick={this.handleClick} />
+					{this.state.winner && <Winner winner={this.state.winner} handleRestartGame={this.handleRestartGame} />}
+					{/* <h3>History:</h3> */}
+					{/* <History historyArray={this.state.history} handleHistoryJump={this.handleHistoryJump} /> */}
 				</div>
 			</div>
 		)
