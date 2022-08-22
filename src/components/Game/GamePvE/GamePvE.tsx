@@ -108,12 +108,6 @@ export default class GamePvE extends Component<any, IState> {
 		}
 	}
 
-	handleHistoryJump = (step: number) => {
-		return this.setState({
-			step: step,
-		});
-	}
-
 	computerMove(history: any[][], computerSquares: any) {
 		if (this.state.winner !== undefined) return;
 
@@ -205,8 +199,6 @@ export default class GamePvE extends Component<any, IState> {
 				<div className={style.game}>
 					<GameTable winningSquares={this.state.winningSquares} history={this.state.history} step={this.state.step} handleClick={this.handleClick} />
 					{this.state.winner && <Winner result={this.state.winner} handleRestartGame={this.handleRestartGame} />}
-					{/* <h3>History:</h3> */}
-					{/* <History historyArray={this.state.history} handleHistoryJump={this.handleHistoryJump} /> */}
 				</div>
 			</div>
 		)
