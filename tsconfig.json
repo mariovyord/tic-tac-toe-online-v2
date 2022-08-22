@@ -23,5 +23,9 @@
 	"include": [
 		"src",
 		"src/configs/firebase.config.ts"
+	],
+	"exclude": [
+		"src/**/*.spec.ts",
+		"src/**/*.test.ts"
 	]
 }
