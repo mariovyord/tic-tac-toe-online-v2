@@ -19,7 +19,7 @@ interface IState {
 	computerData: TUserData,
 	computerSign: 'x' | 'o',
 	turn: string,
-	winner: undefined | string,
+	winner: undefined | 'win' | 'lose' | 'draw',
 	history: any[][],
 	step: number,
 	winningSquares: boolean[],
@@ -65,17 +65,22 @@ export default class GamePvE extends Component<any, IState> {
 
 		// check if AI is first and make a move if it is
 		setTimeout(() => {
-			if (this.state.turn === this.state.computerSign) {
+			if (this.state.turn === this.state.computerSign && this.state.history.length === 1) {
 				const newHistory = [...this.state.history];
 				const computerMove = ai(this.state.computerSign, newHistory[0]);
-				console.log(computerMove);
 				this.computerMove(newHistory, computerMove);
 			}
 		}, 500)
 	}
 
 	componentDidUpdate() {
-
+		// check if the game is draw
+		const isFull = this.state.history[this.state.step].filter(x => x === undefined);
+		if (isFull.length === 0 && this.state.winner === undefined) {
+			this.setState({
+				winner: 'draw',
+			})
+		}
 	}
 
 	checkForWinner = (squares: []) => {
@@ -100,7 +105,7 @@ export default class GamePvE extends Component<any, IState> {
 
 				return this.setState({
 					winningSquares: win,
-					winner: squares[combo[0]]
+					winner: this.state.userSign === squares[combo[0]] ? 'win' : 'lose',
 				});
 			}
 		}
@@ -113,6 +118,8 @@ export default class GamePvE extends Component<any, IState> {
 	}
 
 	computerMove(history: any[][], computerSquares: any) {
+		if (this.state.winner !== undefined) return;
+
 		const newHistory = [...history];
 		newHistory.push(computerSquares);
 
@@ -184,7 +191,7 @@ export default class GamePvE extends Component<any, IState> {
 				</div>
 				<div className={style.game}>
 					<GameTable winningSquares={this.state.winningSquares} history={this.state.history} step={this.state.step} handleClick={this.handleClick} />
-					{this.state.winner && <Winner winner={this.state.winner} handleRestartGame={this.handleRestartGame} />}
+					{this.state.winner && <Winner result={this.state.winner} handleRestartGame={this.handleRestartGame} />}
 					{/* <h3>History:</h3> */}
 					{/* <History historyArray={this.state.history} handleHistoryJump={this.handleHistoryJump} /> */}
 				</div>

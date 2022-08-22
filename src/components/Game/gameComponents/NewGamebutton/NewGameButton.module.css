@@ -1,4 +1,5 @@
 .new-game-button {
+	width: 300px;
 	background-color: var(--blue);
 	color: rgb(41, 12, 12);
 	font-weight: bold;
