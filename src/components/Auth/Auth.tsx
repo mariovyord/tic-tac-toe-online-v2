@@ -17,11 +17,6 @@ export default class Auth extends Component {
 
 	handleGoogleLogin() {
 		AuthLib.handleGoogleLogin(app)
-			.then((user) => {
-				this.setState({
-					isLogged: true,
-				})
-			})
 			.catch((err) => {
 				// TODO
 				console.log(err);
@@ -30,11 +25,6 @@ export default class Auth extends Component {
 
 	handleGuestLogin() {
 		AuthLib.handleGuestLogin(app)
-			.then((user) => {
-				this.setState({
-					isLogged: true,
-				})
-			})
 			.catch((err) => {
 				// TODO
 				console.log(err);

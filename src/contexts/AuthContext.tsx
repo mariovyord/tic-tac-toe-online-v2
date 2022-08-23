@@ -1,6 +1,5 @@
 import React, { Component, createContext } from 'react';
 import { firebaseObserver } from '../configs/firebase.config';
-import { Navigate } from 'react-router-dom';
 import { User } from 'firebase/auth';
 
 interface IProps {
