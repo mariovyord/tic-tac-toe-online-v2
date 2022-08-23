@@ -1,3 +1,11 @@
 .active {
 	color: var(--pink);
 }
+
+.logoutBtn {
+	color: red;
+}
+
+.logoutBtn:hover {
+	cursor: pointer;
+}
