@@ -1,14 +1,14 @@
 import { Component } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { AuthContext } from '../contexts/AuthContext';
 
-export class PrivateRoutes extends Component {
-	static contextType = AuthContext;
-	context!: React.ContextType<typeof AuthContext>;
+interface IProps {
+	authenticated: boolean,
+}
 
+export class PrivateRoutes extends Component<IProps, any> {
 	render() {
 		return (
-			this.context.authenticated ? <Outlet /> : <Navigate to='/signin' />
+			this.props.authenticated ? <Outlet /> : <Navigate to='/signin' />
 		)
 	}
 }

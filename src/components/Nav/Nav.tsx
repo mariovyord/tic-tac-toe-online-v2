@@ -6,7 +6,6 @@ interface IProps {
 }
 
 interface IState {
-	user: null | object,
 	toggle: boolean,
 }
 
@@ -14,7 +13,6 @@ export default class Nav extends Component<IProps, IState> {
 	constructor(props: IProps) {
 		super(props);
 		this.state = {
-			user: null,
 			toggle: false,
 		}
 	}

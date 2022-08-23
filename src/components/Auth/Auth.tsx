@@ -9,11 +9,12 @@ import SigninBtn from './signinBtn/SigninBtn';
 import { app } from '../../configs/firebase.config';
 import { AuthLib } from '../../utils/AuthLib';
 import { Navigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext';
 
-export default class Auth extends Component {
-	static contextType = AuthContext;
-	context!: React.ContextType<typeof AuthContext>;
+interface IProps {
+	authenticated: boolean,
+}
+
+export default class Auth extends Component<IProps, any> {
 
 	handleGoogleLogin() {
 		AuthLib.handleGoogleLogin(app)
@@ -32,7 +33,7 @@ export default class Auth extends Component {
 	}
 
 	render() {
-		if (this.context.authenticated === false) {
+		if (this.props.authenticated === false) {
 			return (
 				<div className={styles.wrapper}>
 					<div className={styles.welcome}>

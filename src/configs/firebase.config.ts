@@ -26,16 +26,12 @@ export const firebaseObserver = ReactObserver();
 
 // const analytics = getAnalytics(app);
 
-// check if there is user
-const auth = getAuth(app);
+export const auth = getAuth(app);
 
 auth.onAuthStateChanged(function (user) {
-	firebaseObserver.publish("authStateChanged", userData())
+	firebaseObserver.publish("authStateChanged", isLoggedIn())
 });
 
-export function userData() {
-	return {
-		loggedIn: Boolean(auth.currentUser),
-		user: auth.currentUser,
-	};
+export function isLoggedIn() {
+	return Boolean(auth.currentUser)
 }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { AuthContext } from '../../../contexts/AuthContext';
 import ai from '../../../utils/ai/ai';
 
 import GameTable from '../gameComponents/GameTable';
@@ -8,7 +7,9 @@ import Winner from '../gameComponents/Winner/Winner';
 
 import style from './GamePvE.module.css';
 import { TGameArray, THistoryArray } from '../../../types/game.types';
+
 import { User } from 'firebase/auth';
+import { auth } from '../../../configs/firebase.config';
 
 interface IState {
 	user: null | User,
@@ -25,8 +26,6 @@ interface IState {
 }
 
 export default class GamePvE extends Component<any, IState> {
-	static contextType = AuthContext;
-	context!: React.ContextType<typeof AuthContext>;
 
 	constructor(props: any) {
 		super(props);
@@ -50,7 +49,7 @@ export default class GamePvE extends Component<any, IState> {
 		const sign2 = sign1 === 'x' ? 'o' : 'x';
 		// TODO check how it works  for guest users
 		this.setState({
-			user: this.context.user,
+			user: auth.currentUser,
 			userSign: sign1,
 			computerSign: sign2,
 		});
@@ -164,7 +163,6 @@ export default class GamePvE extends Component<any, IState> {
 		this.setState({
 			turn: 'x',
 			winner: undefined,
-			user: this.context.user,
 			userSign: sign1,
 			computerSign: sign2,
 			history: [Array(9).fill(undefined)],
