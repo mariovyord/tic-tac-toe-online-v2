@@ -1,6 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
+import "firebase/firestore";
+import "firebase/analytics";
+import ReactObserver from 'react-event-observer';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -18,5 +21,18 @@ export const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+export const app = initializeApp(firebaseConfig);
+export const firebaseObserver = ReactObserver();
+
+// const analytics = getAnalytics(app);
+
+// check if there is user
+const auth = getAuth(app);
+
+auth.onAuthStateChanged(function (user) {
+	firebaseObserver.publish("authStateChanged", loggedIn())
+});
+
+export function loggedIn() {
+	return Boolean(auth.currentUser);
+}

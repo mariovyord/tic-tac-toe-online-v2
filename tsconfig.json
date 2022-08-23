@@ -22,7 +22,8 @@
 	},
 	"include": [
 		"src",
-		"src/configs/firebase.config.ts"
+		"src/configs/firebase.config.ts",
+		"src/configs/react-event-observer.d.ts"
 	],
 	"exclude": [
 		"src/**/*.spec.ts",

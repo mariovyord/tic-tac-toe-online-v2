@@ -1,10 +1,12 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom';
 
-const PrivateRoutes = () => {
-	let auth = { 'token': true }
+type TProps = {
+	authenticated: boolean
+}
 
+const PrivateRoutes: React.FC<TProps> = ({ authenticated }) => {
 	return (
-		auth.token ? <Outlet /> : <Navigate to='/signin' />
+		authenticated ? <Outlet /> : <Navigate to='/signin' />
 	)
 }
 
