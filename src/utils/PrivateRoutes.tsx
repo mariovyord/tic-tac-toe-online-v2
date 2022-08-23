@@ -1,13 +1,15 @@
+import { Component } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
-type TProps = {
-	authenticated: boolean
+export class PrivateRoutes extends Component {
+	static contextType = AuthContext;
+	context!: React.ContextType<typeof AuthContext>;
+
+	render() {
+		return (
+			this.context.authenticated ? <Outlet /> : <Navigate to='/signin' />
+		)
+	}
 }
 
-const PrivateRoutes: React.FC<TProps> = ({ authenticated }) => {
-	return (
-		authenticated ? <Outlet /> : <Navigate to='/signin' />
-	)
-}
-
-export default PrivateRoutes;

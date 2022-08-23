@@ -2,19 +2,20 @@ import React, { Component } from 'react'
 import { AuthContext } from '../../../contexts/AuthContext';
 import ai from '../../../utils/ai/ai';
 
-import { TUserData } from '../../../types/user.types';
-
 import GameTable from '../gameComponents/GameTable';
 import PlayerCard from '../gameComponents/PlayerCard/PlayerCard';
 import Winner from '../gameComponents/Winner/Winner';
 
 import style from './GamePvE.module.css';
 import { TGameArray, THistoryArray } from '../../../types/game.types';
+import { User } from 'firebase/auth';
 
 interface IState {
-	userData: TUserData,
+	user: null | User,
 	userSign: 'x' | 'o',
-	computerData: TUserData,
+	computerData: {
+		displayName: string,
+	},
 	computerSign: 'x' | 'o',
 	turn: string,
 	winner: undefined | 'win' | 'lose' | 'draw',
@@ -30,14 +31,10 @@ export default class GamePvE extends Component<any, IState> {
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			userData: {
-				_id: '',
-				firstName: '',
-			},
+			user: null,
 			userSign: 'x',
 			computerData: {
-				_id: 'super-ai',
-				firstName: 'AI',
+				displayName: 'AI',
 			},
 			computerSign: 'o',
 			turn: 'x',
@@ -51,9 +48,9 @@ export default class GamePvE extends Component<any, IState> {
 	componentDidMount() {
 		const sign1 = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
 		const sign2 = sign1 === 'x' ? 'o' : 'x';
-
+		// TODO check how it works  for guest users
 		this.setState({
-			userData: this.context.userData,
+			user: this.context.user,
 			userSign: sign1,
 			computerSign: sign2,
 		});
@@ -167,7 +164,7 @@ export default class GamePvE extends Component<any, IState> {
 		this.setState({
 			turn: 'x',
 			winner: undefined,
-			userData: this.context.userData,
+			user: this.context.user,
 			userSign: sign1,
 			computerSign: sign2,
 			history: [Array(9).fill(undefined)],
@@ -189,10 +186,10 @@ export default class GamePvE extends Component<any, IState> {
 		return (
 			<div className={`${style.container}`}>
 				<div className={style.player1}>
-					<PlayerCard userData={this.state.userSign === 'x' ? this.state.userData : this.state.computerData} sign={'x'} yourTurn={this.state.turn === 'x'} />
+					<PlayerCard displayName={this.state.userSign === 'x' ? this.state.user?.displayName : this.state.computerData.displayName} sign={'x'} yourTurn={this.state.turn === 'x'} />
 				</div>
 				<div className={style.player2}>
-					<PlayerCard userData={this.state.userSign === 'o' ? this.state.userData : this.state.computerData} sign={'o'} yourTurn={this.state.turn === 'o'} />
+					<PlayerCard displayName={this.state.userSign === 'o' ? this.state.user?.displayName : this.state.computerData.displayName} sign={'o'} yourTurn={this.state.turn === 'o'} />
 				</div>
 				<div className={style.game}>
 					<GameTable winningSquares={this.state.winningSquares} history={this.state.history} step={this.state.step} handleClick={this.handleClick} />

@@ -9,52 +9,40 @@ import SigninBtn from './signinBtn/SigninBtn';
 import { app } from '../../configs/firebase.config';
 import { AuthLib } from '../../utils/AuthLib';
 import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContext';
 
-// type TUserData = undefined | any;
-
-interface IState {
-	isLogged: boolean,
-}
-
-interface IProps {
-	authenticated: boolean,
-}
-
-export default class Auth extends Component<IProps, IState> {
-	constructor(props: IProps) {
-		super(props);
-		this.state = ({
-			isLogged: props.authenticated,
-		})
-	}
-
+export default class Auth extends Component {
+	static contextType = AuthContext;
+	context!: React.ContextType<typeof AuthContext>;
 
 	handleGoogleLogin() {
 		AuthLib.handleGoogleLogin(app)
-			.then(() => {
+			.then((user) => {
 				this.setState({
 					isLogged: true,
 				})
 			})
 			.catch((err) => {
+				// TODO
 				console.log(err);
 			});
 	}
 
 	handleGuestLogin() {
 		AuthLib.handleGuestLogin(app)
-			.then(() => {
+			.then((user) => {
 				this.setState({
 					isLogged: true,
 				})
 			})
 			.catch((err) => {
+				// TODO
 				console.log(err);
 			});
 	}
 
 	render() {
-		if (this.state.isLogged === false) {
+		if (this.context.authenticated === false) {
 			return (
 				<div className={styles.wrapper}>
 					<div className={styles.welcome}>

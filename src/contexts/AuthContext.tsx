@@ -1,51 +1,64 @@
-import React, { Component, createContext } from 'react'
+import React, { Component, createContext } from 'react';
+import { firebaseObserver } from '../configs/firebase.config';
 import { Navigate } from 'react-router-dom';
-import { TUserData } from '../types/user.types';
+import { User } from 'firebase/auth';
 
 interface IProps {
 	children: React.ReactNode
 }
 
 interface IState {
-	hasUser: boolean,
-	userData: TUserData
+	authenticated: boolean,
+	user: null | User,
+	isLoading: boolean,
 }
 
 interface IContext {
-	hasUser: boolean,
-	userData: TUserData,
+	authenticated: boolean,
+	user: null | User,
 }
 
 export const AuthContext = createContext<IContext>({
-	hasUser: false,
-	userData: {
-		_id: '',
-		firstName: '',
-	}
-}
-);
+	authenticated: false,
+	user: null,
+});
 
 export class AuthProvider extends Component<IProps, IState> {
 	constructor(props: IProps) {
 		super(props);
 		this.state = {
-			hasUser: true,
-			userData: {
-				_id: '123',
-				firstName: 'Mario'
-			}
+			authenticated: false,
+			user: null,
+			isLoading: true,
 		}
+	}
+
+	componentDidMount() {
+		firebaseObserver.subscribe('authStateChanged', (data: any) => {
+			this.setState({
+				authenticated: data.loggedIn,
+				user: data.user,
+				isLoading: false,
+			})
+		});
+	}
+
+	componentWillUnmount() {
+		firebaseObserver.unsubscribe('authStateChanged');
 	}
 
 	render() {
 		return (
 			<AuthContext.Provider value={
 				{
-					hasUser: true,
-					userData: this.state.userData
+					authenticated: this.state.authenticated,
+					user: this.state.user,
 				}
 			}>
-				{this.state.hasUser ? this.props.children : <Navigate to="/signin" />}
+				{this.state.isLoading
+					? <h1>Loading...</h1>
+					: this.props.children
+				}
 			</AuthContext.Provider>
 		)
 	}

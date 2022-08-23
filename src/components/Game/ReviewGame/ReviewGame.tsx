@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { Component } from 'react'
 import { AuthContext } from '../../../contexts/AuthContext';
 import ai from '../../../utils/ai/ai';

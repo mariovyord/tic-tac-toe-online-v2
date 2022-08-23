@@ -30,9 +30,12 @@ export const firebaseObserver = ReactObserver();
 const auth = getAuth(app);
 
 auth.onAuthStateChanged(function (user) {
-	firebaseObserver.publish("authStateChanged", loggedIn())
+	firebaseObserver.publish("authStateChanged", userData())
 });
 
-export function loggedIn() {
-	return Boolean(auth.currentUser);
+export function userData() {
+	return {
+		loggedIn: Boolean(auth.currentUser),
+		user: auth.currentUser,
+	};
 }
