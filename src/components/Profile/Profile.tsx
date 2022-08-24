@@ -1,11 +1,10 @@
 import { User } from 'firebase/auth';
-import { collection, getDocs, orderBy, query, where, limit, DocumentData, limitToLast } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, where, DocumentData, limitToLast } from 'firebase/firestore';
 import React, { Component } from 'react'
 import { auth, db } from '../../configs/firebase.config';
 import styles from './Profile.module.css';
 import Table from './table/Table';
 import Spinner from '../common/Spinner/Spinner';
-import { Link } from 'react-router-dom';
 
 interface IState {
 	user: null | User,

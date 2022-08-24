@@ -101,7 +101,7 @@ export default class GamePvE extends Component<any, IState> {
 					const data = {
 						owner: this.state.user.uid,
 						mode: 'pve',
-						history: JSON.stringify(this.state.history),
+						history: JSON.stringify([...this.state.history, squares]),
 						playersIds: [this.state.user.uid, ''],
 						playerDisplayNames: [this.state.user.displayName, 'AI'],
 						playerSigns: [this.state.userSign, this.state.computerSign],

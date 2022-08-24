@@ -8,7 +8,9 @@ interface IHistory {
 const History: React.FC<IHistory> = ({ historyArray, handleHistoryJump }) => {
 	return (
 		<div>
-			{historyArray.map((x, i) => <button className={style['history-button']} onClick={() => handleHistoryJump(i)} key={i}>Turn {i}</button>)}
+			{historyArray
+				.slice(1)
+				.map((x, i) => <button className={style['history-button']} onClick={() => handleHistoryJump(i + 1)} key={i}>Turn {i + 1}</button>)}
 		</div>
 	)
 }
