@@ -8,8 +8,10 @@ import Winner from '../gameComponents/Winner/Winner';
 import style from './GamePvE.module.css';
 import { TGameArray, THistoryArray } from '../../../types/game.types';
 
+import { setDoc, doc, serverTimestamp, collection, addDoc } from "firebase/firestore";
 import { User } from 'firebase/auth';
-import { auth } from '../../../configs/firebase.config';
+import { auth, db } from '../../../configs/firebase.config';
+
 
 interface IState {
 	user: null | User,
@@ -94,6 +96,22 @@ export default class GamePvE extends Component<any, IState> {
 				win[combo[1]] = true;
 				win[combo[2]] = true;
 
+				// check if user is not anonymous and save game db
+				if (this.state.user && this.state.user.uid) {
+					const data = {
+						owner: this.state.user.uid,
+						history: JSON.stringify(this.state.history),
+						player1: { displayName: this.state.user.displayName },
+						player1Sign: this.state.userSign,
+						player2: this.state.computerData,
+						player2Sign: this.state.computerSign,
+						createdAt: serverTimestamp(),
+					}
+					const ref = collection(db, "games")
+					addDoc(ref, data)
+				}
+
+				// end the game
 				return this.setState({
 					winningSquares: win,
 					winner: this.state.userSign === squares[combo[0]] ? 'win' : 'lose',
@@ -157,6 +175,7 @@ export default class GamePvE extends Component<any, IState> {
 	}
 
 	handleRestartGame = () => {
+		// reset state
 		const sign1 = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
 		const sign2 = sign1 === 'x' ? 'o' : 'x';
 

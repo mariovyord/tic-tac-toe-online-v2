@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import "firebase/firestore";
 import "firebase/analytics";
 import ReactObserver from 'react-event-observer';
@@ -23,7 +24,7 @@ export const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 export const firebaseObserver = ReactObserver();
-
+export const db = getFirestore(app);
 // const analytics = getAnalytics(app);
 
 export const auth = getAuth(app);
