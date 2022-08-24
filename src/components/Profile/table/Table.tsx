@@ -22,7 +22,7 @@ const Table: React.FC<IProps> = ({
 			</thead>
 			<tbody>
 				{
-					pveGames.map(game => <Row game={game} isWinner={game.playerSigns[game.playersIds.indexOf(uid)] === game.winner} />)
+					pveGames.map(game => <Row key={game.id} game={game} isWinner={game.playerSigns[game.playersIds.indexOf(uid)] === game.winner} />)
 				}
 			</tbody>
 		</table>
