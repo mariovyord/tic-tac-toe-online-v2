@@ -6,6 +6,7 @@ import GamePvE from '../Game/GamePvE/GamePvE'
 import Home from '../Home/Home'
 import Nav from '../Nav/Nav'
 import NotFound from '../NotFound/NotFound'
+import Profile from '../Profile/Profile'
 
 export default class CommonLayout extends Component {
 	render() {
@@ -15,6 +16,7 @@ export default class CommonLayout extends Component {
 				<main>
 					<Routes>
 						<Route path='/' element={<Home />} />
+						<Route path='/profile' element={<Profile />} />
 						<Route path='/game' >
 							<Route path="PvE" element={<GamePvE />} />
 							<Route path="PvP" element={<Game />} />

@@ -8,7 +8,7 @@ import Winner from '../gameComponents/Winner/Winner';
 import style from './GamePvE.module.css';
 import { TGameArray, THistoryArray } from '../../../types/game.types';
 
-import { setDoc, doc, serverTimestamp, collection, addDoc } from "firebase/firestore";
+import { serverTimestamp, collection, addDoc } from "firebase/firestore";
 import { User } from 'firebase/auth';
 import { auth, db } from '../../../configs/firebase.config';
 
@@ -97,17 +97,18 @@ export default class GamePvE extends Component<any, IState> {
 				win[combo[2]] = true;
 
 				// check if user is not anonymous and save game db
-				if (this.state.user && this.state.user.uid) {
+				if (this.state.user && this.state.user.isAnonymous === false) {
 					const data = {
 						owner: this.state.user.uid,
 						mode: 'pve',
 						history: JSON.stringify(this.state.history),
-						player1: { displayName: this.state.user.displayName },
-						player1Sign: this.state.userSign,
-						player2: this.state.computerData,
-						player2Sign: this.state.computerSign,
+						playersIds: [this.state.user.uid, ''],
+						playerDisplayNames: [this.state.user.displayName, 'AI'],
+						playerSigns: [this.state.userSign, this.state.computerSign],
+						winner: this.state.userSign === squares[combo[0]] ? this.state.userSign : this.state.computerSign,
 						createdAt: serverTimestamp(),
 					}
+
 					const ref = collection(db, "games")
 					addDoc(ref, data)
 				}

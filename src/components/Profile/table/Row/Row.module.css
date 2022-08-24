@@ -1,0 +1,23 @@
+.win {
+	background-color: var(--green);
+	color: black;
+}
+
+.loss {
+	background-color: var(--red);
+	color: black;
+}
+
+.row {
+	cursor: pointer;
+	background-color: var(--main-bg-color);
+}
+
+.row:hover {
+	background-color: var(--blue);
+}
+
+.td {
+	padding: 0.3rem 0;
+	vertical-align: middle;
+}
