@@ -70,7 +70,24 @@ export default class GamePvE extends Component<any, IState> {
 		// check if the game is draw
 		const isFull = this.state.history[this.state.step].filter(x => x === undefined);
 		if (isFull.length === 0 && this.state.winner === undefined) {
-			this.setState({
+
+			if (this.state.user && this.state.user.isAnonymous === false) {
+				const data = {
+					owner: this.state.user.uid,
+					mode: 'pve',
+					history: JSON.stringify([...this.state.history]),
+					playersIds: [this.state.user.uid, ''],
+					playerDisplayNames: [this.state.user.displayName, 'AI'],
+					playerSigns: [this.state.userSign, this.state.computerSign],
+					winner: 'draw',
+					createdAt: serverTimestamp(),
+				}
+
+				const ref = collection(db, "games")
+				addDoc(ref, data)
+			}
+
+			return this.setState({
 				winner: 'draw',
 			})
 		}

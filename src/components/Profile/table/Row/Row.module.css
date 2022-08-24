@@ -8,6 +8,11 @@
 	color: black;
 }
 
+.draw {
+	background-color: gray;
+	color: black;
+}
+
 .row {
 	cursor: pointer;
 	background-color: var(--main-bg-color);
