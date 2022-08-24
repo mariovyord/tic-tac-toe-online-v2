@@ -100,6 +100,7 @@ export default class GamePvE extends Component<any, IState> {
 				if (this.state.user && this.state.user.uid) {
 					const data = {
 						owner: this.state.user.uid,
+						mode: 'pve',
 						history: JSON.stringify(this.state.history),
 						player1: { displayName: this.state.user.displayName },
 						player1Sign: this.state.userSign,
