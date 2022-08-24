@@ -112,7 +112,11 @@ class ReviewGame extends Component<any, IState> {
 			)
 		} else {
 			return (
-				<Spinner />
+				<div className={`${style.container}`}>
+					<div></div>
+					<Spinner />
+					<div></div>
+				</div>
 			)
 		}
 	}
