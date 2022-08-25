@@ -7,20 +7,20 @@ import Winner from '../../gameComponents/Winner/Winner';
 import style from './GamePvP.module.css';
 import { TGameArray, THistoryArray } from '../../../../types/game.types';
 
-import { serverTimestamp, collection, addDoc, onSnapshot, doc } from "firebase/firestore";
+import { serverTimestamp, collection, addDoc, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { User } from 'firebase/auth';
 import { auth, db } from '../../../../configs/firebase.config';
 import { withRouter } from '../../../../hoc/withRouter';
 import Spinner from '../../../common/Spinner/Spinner';
+import { GiTrophiesShelf } from 'react-icons/gi';
 
 interface IState {
 	user: null | User,
+	userIndex: 0 | 1,
 	game: null | any,
 	gameId: string,
-	turn: string,
 	xIndex: 0 | 1,
 	winner: undefined | 'win' | 'lose' | 'draw',
-	step: number,
 	winningSquares: boolean[],
 	loading: boolean,
 }
@@ -30,32 +30,38 @@ class GamePvP extends Component<any, IState> {
 		super(props);
 		this.state = {
 			user: auth.currentUser,
+			userIndex: 0,
 			game: null,
 			gameId: props.router.params.id,
-			turn: 'x',
 			xIndex: 0,
 			winner: undefined,
-			step: 0,
 			winningSquares: Array(9).fill(false),
 			loading: true,
 		}
 	}
 
 	componentDidMount() {
+		this.handleUpdateGame()
+	}
+
+	componentDidUpdate() {
+
+	}
+
+	handleUpdateGame() {
 		onSnapshot(doc(db, "activeGames", this.state.gameId), (doc) => {
 			const data = doc.data();
+			console.log('UPDATED DATA');
+
 			if (data) {
 				this.setState({
 					game: { ...data, history: JSON.parse(data.history) },
 					loading: false,
 					xIndex: data.playerSigns.indexOf('x'),
+					userIndex: data.playersIds.indexOf(this.state.user?.uid),
 				})
 			}
 		});
-	}
-
-	componentDidUpdate() {
-
 	}
 
 	checkForWinner = (squares: []) => {
@@ -63,7 +69,41 @@ class GamePvP extends Component<any, IState> {
 	}
 
 	handleClick = (num: number) => {
+		const current: TGameArray = this.state.game.history[this.state.game.step];
 
+		// TODO check if its user turn
+		if (this.state.winner !== undefined) return;
+		if (this.state.game.turn === this.state.game.playerSigns[this.state.userIndex] && current[num] !== undefined) return;
+
+		const handleTurn = (): any => {
+			// add user move to array
+			let playersSquares: TGameArray = [...current];
+			playersSquares[num] = this.state.game.playerSigns[this.state.userIndex];
+			return [playersSquares];
+		}
+
+		const [playersSquares] = handleTurn();
+
+		// Player makes a move after little delay
+		const newHistory = [...this.state.game.history];
+
+		newHistory.push(playersSquares);
+		console.log('LETS GO');
+		const ref = doc(db, "activeGames", this.state.game.id);
+		updateDoc(ref, {
+			history: JSON.stringify(newHistory),
+			step: this.state.game.step + 1,
+			turn: this.state.game.turn === 'x' ? 'o' : 'x',
+		})
+			.catch(err => {
+				// TODO ...
+				console.log(err);
+			})
+			.finally(() => {
+				this.setState({
+					loading: false,
+				})
+			})
 	}
 
 	handleRestartGame = () => {
@@ -84,19 +124,19 @@ class GamePvP extends Component<any, IState> {
 						<PlayerCard
 							displayName={this.state.game.playerDisplayNames[this.state.xIndex]}
 							sign={'x'}
-							yourTurn={this.state.turn === 'x'} />
+							yourTurn={this.state.game.turn === 'x'} />
 					</div>
 					<div className={style.player2}>
 						<PlayerCard
 							displayName={this.state.game.playerDisplayNames[this.state.xIndex === 0 ? 1 : 0]}
 							sign={'o'}
-							yourTurn={this.state.turn === 'o'} />
+							yourTurn={this.state.game.turn === 'o'} />
 					</div>
 					<div className={style.game}>
 						<GameTable
 							winningSquares={this.state.winningSquares}
 							history={this.state.game.history}
-							step={this.state.step}
+							step={this.state.game.step}
 							handleClick={this.handleClick} />
 						{this.state.winner && <Winner
 							result={this.state.winner}

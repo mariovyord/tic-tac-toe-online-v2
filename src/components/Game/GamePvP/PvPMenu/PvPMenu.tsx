@@ -36,9 +36,11 @@ export class PvPMenu extends Component<any, IState> {
 				owner: user.uid,
 				mode: 'pvp',
 				open: true,
+				step: 0,
+				turn: 'x',
 				history: JSON.stringify([Array(9).fill(undefined)]),
 				playersIds: [user.uid, ''],
-				playerDisplayNames: [user.displayName || 'Anonymous', ''],
+				playerDisplayNames: [user.displayName || 'Guest', ''],
 				playerSigns: [sign1, sign2],
 				createdAt: serverTimestamp(),
 			}
