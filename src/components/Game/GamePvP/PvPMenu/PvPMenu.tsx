@@ -40,7 +40,7 @@ export class PvPMenu extends Component<any, IState> {
 				turn: 'x',
 				history: JSON.stringify([Array(9).fill(undefined)]),
 				playersIds: [user.uid, ''],
-				playerDisplayNames: [user.displayName || 'Guest', ''],
+				playerDisplayNames: [user.displayName || 'Anonymous', ''],
 				playerSigns: [sign1, sign2],
 				createdAt: serverTimestamp(),
 			}

@@ -10,12 +10,16 @@
 
 .player-card {
 	background-color: var(--main-bg-color);
-	width: 200px;
+	display: flex;
+	align-items: center;
+	gap: 0.7rem;
+	flex-direction: column;
 }
 
 .player-name {
 	color: var(--pink);
-	font-size: 4rem;
+	text-align: center;
+	font-size: 3rem;
 	font-weight: bold;
 	text-align: center;
 }
@@ -29,6 +33,7 @@
 
 .turn-card {
 	margin-top: 1rem;
+	width: 200px;
 	border: 1px solid white;
 	opacity: 0.3;
 	padding: 0.5rem 0.5rem 0.6rem 0.5rem;
