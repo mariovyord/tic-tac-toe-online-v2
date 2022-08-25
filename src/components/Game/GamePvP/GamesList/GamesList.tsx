@@ -15,8 +15,8 @@ interface IState {
 }
 
 class GamesList extends Component<any, IState> {
-	constructor({ }) {
-		super({});
+	constructor(props: any) {
+		super(props);
 		this.state = {
 			openGames: [],
 			loading: false,
@@ -53,9 +53,6 @@ class GamesList extends Component<any, IState> {
 
 	handleJoinGame(game: any) {
 		// check if its already loading game 
-		console.log('im hereeee');
-
-
 		if (this.state.loading === true) return;
 
 		this.setState({

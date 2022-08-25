@@ -10,9 +10,6 @@ interface IGameTable {
 
 export default class GameTable extends Component<any, IGameTable> {
 	render() {
-		console.log(this.props.history);
-		console.log(this.props.step);
-
 		return (
 			<table>
 				<tbody>

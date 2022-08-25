@@ -157,7 +157,6 @@ class GamePvP extends Component<any, IState> {
 		const newHistory = [...this.state.game.history];
 
 		newHistory.push(playersSquares);
-		console.log('LETS GO');
 		const ref = doc(db, "activeGames", this.state.game.id);
 		updateDoc(ref, {
 			history: JSON.stringify(newHistory),

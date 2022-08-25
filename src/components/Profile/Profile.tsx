@@ -12,9 +12,9 @@ interface IState {
 	pvpGames: DocumentData[],
 }
 
-export default class Profile extends Component<{}, IState> {
-	constructor({ }) {
-		super({});
+export default class Profile extends Component<any, IState> {
+	constructor(props: any) {
+		super(props);
 		this.state = {
 			user: auth.currentUser,
 			pveGames: [],
@@ -65,7 +65,6 @@ export default class Profile extends Component<{}, IState> {
 						data.id = x.id;
 						result.unshift(data);
 					});
-					console.log(result)
 					this.setState({
 						pvpGames: result,
 					})

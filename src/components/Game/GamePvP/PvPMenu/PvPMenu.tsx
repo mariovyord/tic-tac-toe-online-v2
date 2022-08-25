@@ -12,8 +12,8 @@ interface IState {
 }
 
 export class PvPMenu extends Component<any, IState> {
-	constructor({ }) {
-		super({});
+	constructor(props: any) {
+		super(props);
 		this.state = {
 			gameId: '',
 			loading: false,
