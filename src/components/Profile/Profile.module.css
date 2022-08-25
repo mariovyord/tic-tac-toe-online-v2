@@ -4,7 +4,7 @@
 	width: 100%;
 	background-color: var(--main-bg-color);
 	text-align: center;
-	min-height: calc(100vh - 170px);
+	min-height: calc(100vh - 150px);
 }
 
 .profile {
