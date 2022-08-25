@@ -26,15 +26,15 @@ export default class Profile extends Component<{}, IState> {
 
 		// GET all PvE games
 		if (this.state.user && this.state.user.isAnonymous === false) {
-			const ref = collection(db, 'games');
-			const q = query(ref,
+			const refPvE = collection(db, 'games');
+			const queryPvE = query(refPvE,
 				where("playersIds", "array-contains", this.state.user.uid),
 				where("mode", "==", "pve"),
 				orderBy("createdAt"),
 				limitToLast(10),
 			);
 
-			getDocs(q)
+			getDocs(queryPvE)
 				.then((doc) => {
 					const result: DocumentData[] = []
 					doc.forEach(x => {
@@ -45,6 +45,29 @@ export default class Profile extends Component<{}, IState> {
 
 					this.setState({
 						pveGames: result,
+					})
+
+				})
+
+			const refPvP = collection(db, 'games');
+			const queryPvP = query(refPvP,
+				where("playersIds", "array-contains", this.state.user.uid),
+				where("mode", "==", "pvp"),
+				orderBy("createdAt"),
+				limitToLast(10),
+			);
+
+			getDocs(queryPvP)
+				.then((doc) => {
+					const result: DocumentData[] = []
+					doc.forEach(x => {
+						const data = x.data();
+						data.id = x.id;
+						result.unshift(data);
+					});
+					console.log(result)
+					this.setState({
+						pvpGames: result,
 					})
 
 				})
@@ -64,8 +87,12 @@ export default class Profile extends Component<{}, IState> {
 							<h1 className={styles.name}>{this.state.user.displayName}</h1>
 						</div>
 						<div className={styles.section}>
-							<h2>Last 10 games vs Super AI:</h2>
-							<Table pveGames={this.state.pveGames} uid={this.state.user.uid} />
+							<h2>Your last 10 games vs other players</h2>
+							<Table games={this.state.pvpGames} uid={this.state.user.uid} />
+						</div>
+						<div className={styles.section}>
+							<h2>Your last 10 games vs Super AI:</h2>
+							<Table games={this.state.pveGames} uid={this.state.user.uid} />
 						</div>
 					</div>
 				</div>

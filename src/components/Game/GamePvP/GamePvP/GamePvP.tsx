@@ -52,9 +52,9 @@ class GamePvP extends Component<any, IState> {
 		const isFull = this.state.game.history[this.state.game.step].filter((x: any) => !x);
 
 		if (isFull.length === 0 && this.state.winner === undefined) {
-			if (this.state.user?.uid === this.state.game.owner && this.state.user?.isAnonymous === false) {
+			if (this.state.user?.uid === this.state.game.owner) {
 				const data = {
-					owner: this.state.user.uid,
+					owner: this.state.user?.uid,
 					mode: 'pvp',
 					history: JSON.stringify([...this.state.game.history]),
 					playersIds: this.state.game.playersIds,
@@ -112,15 +112,15 @@ class GamePvP extends Component<any, IState> {
 				win[combo[2]] = true;
 
 				// check if user is not anonymous and save game db
-				if (this.state.user?.uid === this.state.game.owner && this.state.user?.isAnonymous === false) {
+				if (this.state.user?.uid === this.state.game.owner) {
 					const data = {
-						owner: this.state.user.uid,
+						owner: this.state.user?.uid,
 						mode: 'pvp',
 						history: JSON.stringify([...this.state.game.history, squares]),
 						playersIds: this.state.game.playersIds,
 						playerDisplayNames: this.state.game.playerDisplayNames,
 						playerSigns: this.state.game.playerSigns,
-						winner: this.state.game.playerSigns[this.state.userIndex] === squares[combo[0]] ? 'win' : 'lose',
+						winner: squares[combo[0]],
 						createdAt: serverTimestamp(),
 					}
 

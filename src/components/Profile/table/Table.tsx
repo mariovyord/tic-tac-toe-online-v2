@@ -3,12 +3,12 @@ import { DocumentData } from 'firebase/firestore'
 import { Row } from './Row/Row'
 
 interface IProps {
-	pveGames: DocumentData[],
+	games: DocumentData[],
 	uid: string,
 }
 
 const Table: React.FC<IProps> = ({
-	pveGames,
+	games,
 	uid
 }) => {
 
@@ -24,7 +24,7 @@ const Table: React.FC<IProps> = ({
 			</thead>
 			<tbody>
 				{
-					pveGames.map(game => <Row
+					games.map(game => <Row
 						key={game.id}
 						game={game}
 						ending={game.winner === 'draw'
