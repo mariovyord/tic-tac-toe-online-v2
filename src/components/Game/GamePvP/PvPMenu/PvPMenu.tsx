@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link as div, Navigate } from 'react-router-dom';
+import { Link as div, Link, Navigate } from 'react-router-dom';
 import { IoIosLogIn } from 'react-icons/io';
 import { IoIosCheckboxOutline } from 'react-icons/io';
 import { auth, db } from '../../../../configs/firebase.config';
@@ -76,13 +76,13 @@ export class PvPMenu extends Component<any, IState> {
 							<div><IoIosCheckboxOutline size={'100px'} /></div>
 							<div>Create game</div>
 						</div>
-						<div className={'game-link'}>
+						<Link className={'game-link'} to="/game/PvP/list">
 							<IoIosLogIn size={'100px'} />
 							<div></div>
 							<div>
 								Join game
 							</div>
-						</div>
+						</Link>
 					</div>
 				</div>
 			)

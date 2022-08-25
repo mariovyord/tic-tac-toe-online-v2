@@ -1,0 +1,32 @@
+.wrapper {
+	width: 100%;
+	background-color: var(--main-bg-color);
+	text-align: center;
+	min-height: calc(100vh - 170px);
+	padding-top: 1rem;
+}
+
+.table {
+	margin: 0 auto;
+	max-width: 768px;
+}
+
+.join {
+	background-color: var(--green);
+	color: black;
+}
+
+.row {
+	cursor: pointer;
+	background-color: var(--main-bg-color);
+}
+
+.row:hover {
+	background-color: var(--green);
+}
+
+.td {
+	padding: 0.3rem 0;
+	vertical-align: middle;
+	border-bottom: 1px solid white;
+}
