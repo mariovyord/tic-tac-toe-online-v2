@@ -1,22 +1,22 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-import { GiMicrochip } from 'react-icons/gi';
-import { GiHumanTarget } from 'react-icons/gi';
+import { IoIosLogIn } from 'react-icons/io';
+import { IoIosCheckboxOutline } from 'react-icons/io';
 
-export class Home extends Component {
+export class PvPMenu extends Component {
 	render() {
 		return (
 			<div className={'games-wrapper'}>
 				<div className={'games'}>
 					<Link className={'game-link'} to="/game/PvE">
-						<div><GiMicrochip size={'100px'} /></div>
-						<div>Play vs Artificial Intelligence</div>
+						<div><IoIosCheckboxOutline size={'100px'} /></div>
+						<div>Create game</div>
 					</Link>
 					<Link className={'game-link'} to="/game/PvP">
-						<GiHumanTarget size={'100px'} />
+						<IoIosLogIn size={'100px'} />
 						<div></div>
 						<div>
-							Play vs Real Players
+							Join game
 						</div>
 					</Link>
 				</div>
@@ -25,4 +25,4 @@ export class Home extends Component {
 	}
 }
 
-export default Home;
+export default PvPMenu;
