@@ -64,7 +64,7 @@ class GamesList extends Component<any, IState> {
 
 		const updatedGame = { ...game };
 		updatedGame.open = false;
-		updatedGame.playerDisplayNames[1] = this.state.user?.displayName || 'Guest';
+		updatedGame.playerDisplayNames[1] = this.state.user?.displayName || 'Anonymous';
 		updatedGame.playersIds[1] = this.state.user?.uid;
 
 		const ref = doc(db, "activeGames", game.id);
