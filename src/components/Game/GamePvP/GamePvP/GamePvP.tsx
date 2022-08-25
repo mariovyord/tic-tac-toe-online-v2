@@ -47,14 +47,37 @@ class GamePvP extends Component<any, IState> {
 		this.handleUpdateGame()
 	}
 
-	componentDidUpdate() {
 
+	componentDidUpdate() {
+		// check if the game is draw
+		const isFull = this.state.game.history[this.state.game.step].filter((x: any) => !x);
+
+		if (isFull.length === 0 && this.state.winner === undefined) {
+			if (this.state.user?.uid === this.state.game.owner && this.state.user?.isAnonymous === false) {
+				const data = {
+					owner: this.state.user.uid,
+					mode: 'pvp',
+					history: JSON.stringify([...this.state.game.history]),
+					playersIds: this.state.game.playersIds,
+					playerDisplayNames: this.state.game.playerDisplayNames,
+					playerSigns: this.state.game.playerSigns,
+					winner: 'draw',
+					createdAt: serverTimestamp(),
+				}
+
+				const ref = collection(db, "games")
+				addDoc(ref, data)
+			}
+
+			return this.setState({
+				winner: 'draw',
+			})
+		}
 	}
 
 	handleUpdateGame() {
 		onSnapshot(doc(db, "activeGames", this.state.gameId), (doc) => {
 			const data = doc.data();
-			console.log('UPDATED DATA');
 
 			if (data) {
 				const history = JSON.parse(data.history);
@@ -82,31 +105,29 @@ class GamePvP extends Component<any, IState> {
 		];
 
 		for (let combo of combos) {
-			console.log('checking 1');
-
 			if (!squares[combo[0]] || !squares[combo[1]] || !squares[combo[2]]) {
 			} else if (squares[combo[0]] === squares[combo[1]] && squares[combo[1]] === squares[combo[2]]) {
 				const win = [...this.state.winningSquares];
 				win[combo[0]] = true;
 				win[combo[1]] = true;
 				win[combo[2]] = true;
-				console.log('checking 2');
-				// check if user is not anonymous and save game db
-				// if (this.state.user?.uid === this.state.game.owner && this.state.user?.isAnonymous === false) {
-				// 	const data = {
-				// 		owner: this.state.user.uid,
-				// 		mode: 'pvp',
-				// 		history: JSON.stringify([...this.state.history, squares]),
-				// 		playersIds: [this.state.user.uid, ''],
-				// 		playerDisplayNames: [this.state.user.displayName, 'AI'],
-				// 		playerSigns: [this.state.userSign, this.state.computerSign],
-				// 		winner: this.state.userSign === squares[combo[0]] ? this.state.userSign : this.state.computerSign,
-				// 		createdAt: serverTimestamp(),
-				// 	}
 
-				// 	const ref = collection(db, "games")
-				// 	addDoc(ref, data)
-				// }
+				// check if user is not anonymous and save game db
+				if (this.state.user?.uid === this.state.game.owner && this.state.user?.isAnonymous === false) {
+					const data = {
+						owner: this.state.user.uid,
+						mode: 'pvp',
+						history: JSON.stringify([...this.state.game.history, squares]),
+						playersIds: this.state.game.playersIds,
+						playerDisplayNames: this.state.game.playerDisplayNames,
+						playerSigns: this.state.game.playerSigns,
+						winner: this.state.game.playerSigns[this.state.userIndex] === squares[combo[0]] ? 'win' : 'lose',
+						createdAt: serverTimestamp(),
+					}
+
+					const ref = collection(db, "games")
+					addDoc(ref, data)
+				}
 
 				// end the game
 				return this.setState({
