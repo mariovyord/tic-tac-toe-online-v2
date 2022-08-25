@@ -5,11 +5,14 @@ interface IGameTable {
 	winningSquares: boolean[],
 	history: string[][],
 	handleClick: Function,
-	step: string,
+	step: number,
 }
 
 export default class GameTable extends Component<any, IGameTable> {
 	render() {
+		console.log(this.props.history);
+		console.log(this.props.step);
+
 		return (
 			<table>
 				<tbody>
