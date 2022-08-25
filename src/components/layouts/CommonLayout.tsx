@@ -23,6 +23,7 @@ export default class CommonLayout extends Component {
 							<Route path="PvE" element={<GamePvE />} />
 							<Route path="PvP" element={<PvPMenu />} />
 							<Route path="PvP/list" element={<GamesListWithRouter />} />
+							<Route path="PvP/:id" element={<GamePvP />} />
 							<Route path=":id" element={<ReviewGameWithRouter />} />
 						</Route>
 						<Route path='*' element={<NotFound />} />

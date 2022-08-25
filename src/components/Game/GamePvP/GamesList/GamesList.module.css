@@ -14,15 +14,20 @@
 .join {
 	background-color: var(--green);
 	color: black;
+	cursor: pointer;
+}
+
+.join:hover {
+	color: var(--red);
 }
 
 .row {
-	cursor: pointer;
 	background-color: var(--main-bg-color);
 }
 
 .row:hover {
 	background-color: var(--green);
+	color: black;
 }
 
 .td {
