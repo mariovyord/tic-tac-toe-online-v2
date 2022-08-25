@@ -90,7 +90,6 @@ h2 {
 	display: grid;
 	gap: 2px;
 	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-	/* grid-template-columns: 1fr 2px 1fr; */
 	width: 100%;
 	min-height: calc(100vh - 170px);
 }
@@ -98,6 +97,8 @@ h2 {
 .game-link {
 	background-color: var(--main-bg-color);
 	display: flex;
+	justify-content: center;
+	align-items: center;
 	gap: 1rem;
 	flex-direction: column;
 	height: 100%;
@@ -106,6 +107,7 @@ h2 {
 	transition: background-color 0.3s;
 	transition: font-size 0.3s;
 	transition-timing-function: ease-in-out;
+	cursor: pointer;
 }
 
 .game-link:hover {
@@ -120,4 +122,9 @@ h2 {
 
 .middle-line {
 	background-color: aliceblue;
+}
+
+.absolute {
+	position: absolute;
+	width: 100%;
 }
