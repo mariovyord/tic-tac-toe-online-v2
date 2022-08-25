@@ -13,6 +13,7 @@ import { auth, db } from '../../../../configs/firebase.config';
 import { withRouter } from '../../../../hoc/withRouter';
 import Spinner from '../../../common/Spinner/Spinner';
 import { GiTrophiesShelf } from 'react-icons/gi';
+import { Navigate } from 'react-router-dom';
 
 interface IState {
 	user: null | User,
@@ -23,6 +24,7 @@ interface IState {
 	winner: undefined | 'win' | 'lose' | 'draw',
 	winningSquares: boolean[],
 	loading: boolean,
+	redirect: string,
 }
 
 class GamePvP extends Component<any, IState> {
@@ -37,6 +39,7 @@ class GamePvP extends Component<any, IState> {
 			winner: undefined,
 			winningSquares: Array(9).fill(false),
 			loading: true,
+			redirect: '',
 		}
 	}
 
@@ -54,18 +57,64 @@ class GamePvP extends Component<any, IState> {
 			console.log('UPDATED DATA');
 
 			if (data) {
+				const history = JSON.parse(data.history);
 				this.setState({
-					game: { ...data, history: JSON.parse(data.history) },
+					game: { ...data, history: history },
 					loading: false,
 					xIndex: data.playerSigns.indexOf('x'),
 					userIndex: data.playersIds.indexOf(this.state.user?.uid),
 				})
+				this.checkForWinner(history[history.length - 1]);
 			}
 		});
 	}
 
 	checkForWinner = (squares: []) => {
-		return undefined;
+		const combos = [
+			[0, 1, 2],
+			[3, 4, 5],
+			[6, 7, 8],
+			[0, 3, 6],
+			[1, 4, 7],
+			[2, 5, 8],
+			[0, 4, 8],
+			[2, 4, 6],
+		];
+
+		for (let combo of combos) {
+			console.log('checking 1');
+
+			if (!squares[combo[0]] || !squares[combo[1]] || !squares[combo[2]]) {
+			} else if (squares[combo[0]] === squares[combo[1]] && squares[combo[1]] === squares[combo[2]]) {
+				const win = [...this.state.winningSquares];
+				win[combo[0]] = true;
+				win[combo[1]] = true;
+				win[combo[2]] = true;
+				console.log('checking 2');
+				// check if user is not anonymous and save game db
+				// if (this.state.user?.uid === this.state.game.owner && this.state.user?.isAnonymous === false) {
+				// 	const data = {
+				// 		owner: this.state.user.uid,
+				// 		mode: 'pvp',
+				// 		history: JSON.stringify([...this.state.history, squares]),
+				// 		playersIds: [this.state.user.uid, ''],
+				// 		playerDisplayNames: [this.state.user.displayName, 'AI'],
+				// 		playerSigns: [this.state.userSign, this.state.computerSign],
+				// 		winner: this.state.userSign === squares[combo[0]] ? this.state.userSign : this.state.computerSign,
+				// 		createdAt: serverTimestamp(),
+				// 	}
+
+				// 	const ref = collection(db, "games")
+				// 	addDoc(ref, data)
+				// }
+
+				// end the game
+				return this.setState({
+					winningSquares: win,
+					winner: this.state.game.playerSigns[this.state.userIndex] === squares[combo[0]] ? 'win' : 'lose',
+				});
+			}
+		}
 	}
 
 	handleClick = (num: number) => {
@@ -73,7 +122,7 @@ class GamePvP extends Component<any, IState> {
 
 		// TODO check if its user turn
 		if (this.state.winner !== undefined) return;
-		if (this.state.game.turn === this.state.game.playerSigns[this.state.userIndex] && current[num] !== undefined) return;
+		if (this.state.game.turn !== this.state.game.playerSigns[this.state.userIndex] && current[num] !== undefined) return;
 
 		const handleTurn = (): any => {
 			// add user move to array
@@ -107,7 +156,7 @@ class GamePvP extends Component<any, IState> {
 	}
 
 	handleRestartGame = () => {
-
+		this.props.router.navigate('/game/PvP');
 	}
 
 	render() {
@@ -117,6 +166,8 @@ class GamePvP extends Component<any, IState> {
 				<Spinner />
 				<div></div>
 			</div>
+		} else if (this.state.redirect !== '') {
+			<Navigate to={this.state.redirect} />
 		} else {
 			return (
 				<div className={`${style.container}`}>
@@ -140,7 +191,7 @@ class GamePvP extends Component<any, IState> {
 							handleClick={this.handleClick} />
 						{this.state.winner && <Winner
 							result={this.state.winner}
-							handleRestartGame={this.handleRestartGame} />}
+							handleRestartGame={this.handleRestartGame.bind(this)} />}
 					</div>
 				</div>
 			)
