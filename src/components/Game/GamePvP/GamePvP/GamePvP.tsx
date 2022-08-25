@@ -7,7 +7,7 @@ import Winner from '../../gameComponents/Winner/Winner';
 import style from './GamePvP.module.css';
 import { TGameArray } from '../../../../types/game.types';
 
-import { serverTimestamp, collection, addDoc, onSnapshot, doc, updateDoc } from "firebase/firestore";
+import { serverTimestamp, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { User } from 'firebase/auth';
 import { auth, db } from '../../../../configs/firebase.config';
 import { withRouter } from '../../../../hoc/withRouter';
@@ -65,13 +65,18 @@ class GamePvP extends Component<any, IState> {
 				}
 
 				const ref = collection(db, "games")
-				addDoc(ref, data)
+				addDoc(ref, data);
+				this.deleteGameSession();
 			}
 
 			return this.setState({
 				winner: 'draw',
 			})
 		}
+	}
+
+	deleteGameSession() {
+		deleteDoc(doc(db, "activeGames", this.state.gameId));
 	}
 
 	handleUpdateGame() {
@@ -126,6 +131,7 @@ class GamePvP extends Component<any, IState> {
 
 					const ref = collection(db, "games")
 					addDoc(ref, data)
+					this.deleteGameSession();
 				}
 
 				// end the game
