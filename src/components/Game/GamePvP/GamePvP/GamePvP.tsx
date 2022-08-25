@@ -5,14 +5,13 @@ import PlayerCard from '../../gameComponents/PlayerCard/PlayerCard';
 import Winner from '../../gameComponents/Winner/Winner';
 
 import style from './GamePvP.module.css';
-import { TGameArray, THistoryArray } from '../../../../types/game.types';
+import { TGameArray } from '../../../../types/game.types';
 
 import { serverTimestamp, collection, addDoc, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { User } from 'firebase/auth';
 import { auth, db } from '../../../../configs/firebase.config';
 import { withRouter } from '../../../../hoc/withRouter';
 import Spinner from '../../../common/Spinner/Spinner';
-import { GiTrophiesShelf } from 'react-icons/gi';
 import { Navigate } from 'react-router-dom';
 
 interface IState {
@@ -181,10 +180,13 @@ class GamePvP extends Component<any, IState> {
 	}
 
 	render() {
-		if (this.state.loading) {
+		if (this.state.loading || this.state.game.playersIds.filter((x: any) => x !== '').length < 2) {
 			return <div className={`${style.container}`}>
 				<div></div>
-				<Spinner />
+				<div>
+					<h2 className={style.waiting}>Waiting for players</h2>
+					<Spinner />
+				</div>
 				<div></div>
 			</div>
 		} else if (this.state.redirect !== '') {
