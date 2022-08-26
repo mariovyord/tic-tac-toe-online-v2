@@ -106,7 +106,7 @@ export default class Profile extends Component<any, IState> {
 						<h1 className={styles.name}>Anonymous</h1>
 					</div>
 					<div className={styles.section}>
-						<h2>To build your account and view your games history, you should login with your Google account.</h2>
+						<h2>To view and review your games history, you should login with your Google account.</h2>
 					</div>
 				</div>
 			</div>
