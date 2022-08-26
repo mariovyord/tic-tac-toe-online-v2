@@ -74,10 +74,10 @@ export class PvPMenu extends Component<any, IState> {
 						</div>
 						: null}
 					<div className={'games'}>
-						<div className={'game-link'} onClick={this.handleCreateGame.bind(this)}>
+						<button className={'game-link'} onClick={this.handleCreateGame.bind(this)}>
 							<div><IoIosCheckboxOutline size={'100px'} /></div>
 							<div>Create game</div>
-						</div>
+						</button>
 						<Link className={'game-link'} to="/game/PvP/list">
 							<IoIosLogIn size={'100px'} />
 							<div></div>
