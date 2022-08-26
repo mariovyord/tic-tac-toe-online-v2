@@ -8,7 +8,7 @@ import SigninBtn from './signinBtn/SigninBtn';
 
 import { app } from '../../configs/firebase.config';
 import { AuthLib } from '../../utils/AuthLib';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 interface IProps {
 	authenticated: boolean,
@@ -47,6 +47,9 @@ export default class Auth extends Component<IProps, any> {
 						<SigninBtn login={this.handleGuestLogin.bind(this)} classes={styles['yellow-bg']} text="Continue as guest" >
 							<BsPerson size={'25px'} />
 						</SigninBtn>
+						<div className={styles.notice}>
+							<span>By signing in you agree <br />to our <Link className={styles.privacyLink} to="/privacypolicy">Privacy Policy</Link></span>
+						</div>
 					</div>
 					<ul className={bgStyles.circles}>
 						<li></li>

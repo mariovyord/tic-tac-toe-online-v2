@@ -1,0 +1,26 @@
+.wrapper {
+	background-color: var(--main-bg-color);
+}
+
+.content {
+	padding: 1rem;
+	margin: 0 auto;
+	max-width: 768px;
+}
+
+.content * {
+	margin: 0.5rem 0;
+	line-height: 1.5;
+}
+
+.content a {
+	text-decoration: underline;
+}
+
+.content a:hover {
+	opacity: 0.8;
+}
+
+.bold {
+	font-weight: bold;
+}

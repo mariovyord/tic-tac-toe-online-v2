@@ -7,6 +7,7 @@ import CommonLayout from './components/layouts/CommonLayout';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { Compose } from './utils/Compose';
 import { PrivateRoutes } from './utils/PrivateRoutes';
+import { PrivacyPolicy } from './components/PrivacyPolicy/PrivacyPolicy';
 
 interface IState {
 	authenticated: boolean,
@@ -38,6 +39,7 @@ export default class App extends Component<any, IState> {
 				<Compose components={[NotificationProvider]}>
 					<Routes>
 						<Route path='/signin' element={<Auth authenticated={this.state.authenticated} />} />
+						<Route path='/privacypolicy' element={<PrivacyPolicy />} />
 						<Route element={<PrivateRoutes authenticated={this.state.authenticated} />}>
 							<Route path="*" element={<CommonLayout />} />
 						</Route>

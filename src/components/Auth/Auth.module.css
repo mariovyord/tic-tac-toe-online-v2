@@ -49,3 +49,25 @@
 .yellow-bg {
 	background-color: rgb(199, 199, 57);
 }
+
+.notice {
+	display: flex;
+	background-color: var(--main-bg-color);
+	padding: 1rem 0.5rem;
+	justify-content: center;
+}
+
+.notice span {
+	max-width: 300px;
+	text-align: center;
+}
+
+.privacyLink {
+	display: inline;
+	text-decoration: underline;
+	line-height: 1.5;
+}
+
+.privacyLink:hover {
+	opacity: 0.8;
+}
