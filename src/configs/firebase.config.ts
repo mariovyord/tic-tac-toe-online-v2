@@ -39,5 +39,7 @@ export function isLoggedIn() {
 }
 
 // Activate emulators
-connectFirestoreEmulator(db, 'localhost', 8080);
-connectAuthEmulator(auth, "http://localhost:9099");
+if (window.location.hostname === "localhost") {
+	connectFirestoreEmulator(db, 'localhost', 8080);
+	connectAuthEmulator(auth, "http://localhost:9099");
+}
