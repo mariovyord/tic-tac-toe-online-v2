@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import "firebase/firestore";
 import "firebase/analytics";
 import ReactObserver from 'react-event-observer';
@@ -11,7 +11,7 @@ import ReactObserver from 'react-event-observer';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-export const firebaseConfig = {
+let firebaseConfig: any = {
 	apiKey: "AIzaSyBHHuQgOYr7xTGktiGjq4ApJnIs5EQdv0Q",
 	authDomain: "tic-tac-toe-online-11df9.firebaseapp.com",
 	projectId: "tic-tac-toe-online-11df9",
@@ -20,6 +20,7 @@ export const firebaseConfig = {
 	appId: "1:845943795550:web:1e5f76fd1a3af4a069e9cf",
 	measurementId: "G-8MLGRV81JN"
 };
+
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
@@ -36,3 +37,7 @@ auth.onAuthStateChanged(function (user) {
 export function isLoggedIn() {
 	return Boolean(auth.currentUser)
 }
+
+// Activate emulators
+connectFirestoreEmulator(db, 'localhost', 8080);
+connectAuthEmulator(auth, "http://localhost:9099");
