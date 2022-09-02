@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Link as div, Link, Navigate } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Link, Navigate } from 'react-router-dom';
 import { IoIosLogIn } from 'react-icons/io';
 import { IoIosCheckboxOutline } from 'react-icons/io';
 import { auth, db } from '../../../../configs/firebase.config';
@@ -11,20 +11,17 @@ interface IState {
 	loading: boolean,
 }
 
-export class PvPMenu extends Component<any, IState> {
-	constructor(props: any) {
-		super(props);
-		this.state = {
-			gameId: '',
-			loading: false,
-		}
-	}
+export const PvPMenu: React.FC = () => {
+	const [state, setState] = useState<IState>({
+		gameId: '',
+		loading: false,
+	})
 
-
-	handleCreateGame() {
-		this.setState({
+	const handleCreateGame = () => {
+		setState((st) => ({
+			...st,
 			loading: true,
-		})
+		}))
 
 		const user = auth.currentUser
 
@@ -48,49 +45,49 @@ export class PvPMenu extends Component<any, IState> {
 			const ref = collection(db, "activeGames");
 			addDoc(ref, data)
 				.then((doc) => {
-					this.setState({
+					setState((st) => ({
+						...st,
 						gameId: doc.id,
-					})
+					}))
 				})
 				.catch(err => {
 					console.log(err);
 				})
 				.finally(() => {
-					this.setState({
+					setState((st) => ({
+						...st,
 						loading: false,
-					})
+					}))
 				})
 		}
 
 	}
 
-	render() {
-		if (this.state.gameId === '') {
-			return (
-				<div className={'games-wrapper'}>
-					{this.state.loading
-						? <div className='absolute'>
-							<Spinner />
-						</div>
-						: null}
-					<div className={'games'}>
-						<button className={'game-link'} onClick={this.handleCreateGame.bind(this)}>
-							<div><IoIosCheckboxOutline size={'100px'} /></div>
-							<div>Create game</div>
-						</button>
-						<Link className={'game-link'} to="/game/PvP/list">
-							<IoIosLogIn size={'100px'} />
-							<div></div>
-							<div>
-								Join game
-							</div>
-						</Link>
+	if (state.gameId === '') {
+		return (
+			<div className={'games-wrapper'}>
+				{state.loading
+					? <div className='absolute'>
+						<Spinner />
 					</div>
+					: null}
+				<div className={'games'}>
+					<button className={'game-link'} onClick={handleCreateGame.bind(this)}>
+						<div><IoIosCheckboxOutline size={'100px'} /></div>
+						<div>Create game</div>
+					</button>
+					<Link className={'game-link'} to="/game/PvP/list">
+						<IoIosLogIn size={'100px'} />
+						<div></div>
+						<div>
+							Join game
+						</div>
+					</Link>
 				</div>
-			)
-		} else {
-			return <Navigate to={`/game/PvP/${this.state.gameId}`} />
-		}
+			</div>
+		)
+	} else {
+		return <Navigate to={`/game/PvP/${state.gameId}`} />
 	}
 }
 

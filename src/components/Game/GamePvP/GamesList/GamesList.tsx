@@ -1,9 +1,8 @@
 import { User } from 'firebase/auth';
-import { collection, doc, DocumentData, getDocs, limitToLast, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
-import React, { Component } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { collection, doc, DocumentData, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { auth, db } from '../../../../configs/firebase.config';
-import { withRouter } from '../../../../hoc/withRouter';
 import Spinner from '../../../common/Spinner/Spinner';
 import styles from './GamesList.module.css';
 
@@ -14,19 +13,16 @@ interface IState {
 	navigateTo: string,
 }
 
-class GamesList extends Component<any, IState> {
-	constructor(props: any) {
-		super(props);
-		this.state = {
-			openGames: [],
-			loading: false,
-			user: auth.currentUser,
-			navigateTo: '',
-		}
-	}
+const GamesList: React.FC = () => {
+	const [state, setState] = useState<IState>({
+		openGames: [],
+		loading: false,
+		user: auth.currentUser,
+		navigateTo: '',
+	})
 
-	componentDidMount() {
-		if (this.state.user) {
+	useEffect(() => {
+		if (state.user) {
 			const ref = collection(db, 'activeGames');
 			const q = query(ref,
 				where("mode", "==", "pvp"),
@@ -43,82 +39,84 @@ class GamesList extends Component<any, IState> {
 						result.unshift(data);
 					});
 
-					this.setState({
+					setState((st) => ({
+						...st,
 						openGames: result,
-					})
+					}))
 
 				})
 		}
-	}
+	}, [])
 
-	handleJoinGame(game: any) {
+	const handleJoinGame = (game: any) => {
 		// check if its already loading game 
-		if (this.state.loading === true) return;
+		if (state.loading === true) return;
 
-		this.setState({
+		setState((st) => ({
+			...st,
 			loading: true,
-		})
+		}))
 
 		const updatedGame = { ...game };
 		updatedGame.open = false;
-		updatedGame.playerDisplayNames[1] = this.state.user?.displayName || 'Anonymous';
-		updatedGame.playersIds[1] = this.state.user?.uid;
+		updatedGame.playerDisplayNames[1] = state.user?.displayName || 'Anonymous';
+		updatedGame.playersIds[1] = state.user?.uid;
 
 		const ref = doc(db, "activeGames", game.id);
 		updateDoc(ref, updatedGame)
 			.then(() => {
-				this.setState({
+				setState((st) => ({
+					...st,
 					navigateTo: `/game/PvP/${game.id}`,
-				})
+				}))
 			})
 			.catch(err => {
 				// TODO ...
 				console.log(err);
 			})
 			.finally(() => {
-				this.setState({
+				setState((st) => ({
+					...st,
 					loading: false,
-				})
+				}))
 			})
 
 	}
 
-	render() {
-		if (this.state.navigateTo) {
-			return (
-				<Navigate to={this.state.navigateTo} />
-			)
-		} else {
-			return (
-				<div className={styles.wrapper}>
-					{this.state.loading
-						? <div className='absolute'>
-							<Spinner />
-						</div>
-						: null}
-					<h1 className='mb-3'>Open games</h1>
-					<table className={styles.table}>
-						<thead>
-							<tr>
-								<td>Date</td>
-								<td>Opponent</td>
-								<td></td>
+	if (state.navigateTo) {
+		return (
+			<Navigate to={state.navigateTo} />
+		)
+	} else {
+		return (
+			<div className={styles.wrapper}>
+				{state.loading
+					? <div className='absolute'>
+						<Spinner />
+					</div>
+					: null}
+				<h1 className='mb-3'>Open games</h1>
+				<table className={styles.table}>
+					<thead>
+						<tr>
+							<td>Date</td>
+							<td>Opponent</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+						{state.openGames.map(game => {
+							return <tr key={game.id} className={styles.row}>
+								<td className={styles.td}>{game.createdAt.toDate().toISOString().split('T').join(', ').slice(0, -5)}</td>
+								<td className={styles.td}>{game.playerDisplayNames[0]}</td>
+								<td className={`${styles.td} ${styles.join}`} onClick={handleJoinGame.bind(this, game)}>Join</td>
 							</tr>
-						</thead>
-						<tbody>
-							{this.state.openGames.map(game => {
-								return <tr key={game.id} className={styles.row}>
-									<td className={styles.td}>{game.createdAt.toDate().toISOString().split('T').join(', ').slice(0, -5)}</td>
-									<td className={styles.td}>{game.playerDisplayNames[0]}</td>
-									<td className={`${styles.td} ${styles.join}`} onClick={this.handleJoinGame.bind(this, game)}>Join</td>
-								</tr>
-							})}
-						</tbody>
-					</table>
-				</div>
-			)
-		}
+						})}
+					</tbody>
+				</table>
+			</div>
+		)
 	}
 }
 
-export const GamesListWithRouter = withRouter(GamesList);
+export default GamesList;

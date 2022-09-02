@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom';
 import { firebaseObserver } from './configs/firebase.config';
 
@@ -8,9 +8,10 @@ import { NotificationProvider } from './contexts/NotificationContext';
 import { Compose } from './utils/Compose';
 import { PrivateRoutes } from './utils/PrivateRoutes';
 import { PrivacyPolicy } from './components/PrivacyPolicy/PrivacyPolicy';
+
 import GamePvE from './components/Game/GamePvE/GamePvE'
-import { GamePvPWithRouter } from './components/Game/GamePvP/GamePvP/GamePvP'
-import { GamesListWithRouter } from './components/Game/GamePvP/GamesList/GamesList'
+import GamePvP from './components/Game/GamePvP/GamePvP/GamePvP'
+import GamesList from './components/Game/GamePvP/GamesList/GamesList'
 import PvPMenu from './components/Game/GamePvP/PvPMenu/PvPMenu'
 import { ReviewGameWithRouter } from './components/Game/ReviewGame/ReviewGame'
 import Home from './components/Home/Home'
@@ -48,8 +49,8 @@ const App: React.FC = () => {
 							<Route path='/game' >
 								<Route path="PvE" element={<GamePvE />} />
 								<Route path="PvP" element={<PvPMenu />} />
-								<Route path="PvP/list" element={<GamesListWithRouter />} />
-								<Route path="PvP/:id" element={<GamePvPWithRouter />} />
+								<Route path="PvP/list" element={<GamesList />} />
+								<Route path="PvP/:id" element={<GamePvP />} />
 								<Route path=":id" element={<ReviewGameWithRouter />} />
 							</Route>
 							<Route path='*' element={<NotFound />} />

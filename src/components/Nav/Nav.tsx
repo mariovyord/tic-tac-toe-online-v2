@@ -1,4 +1,4 @@
-import { Component, useState } from 'react'
+import { useState } from 'react'
 import navStyles from './Nav.module.css';
 import NavList from './NavList/NavList';
 

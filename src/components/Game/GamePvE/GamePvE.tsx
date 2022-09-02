@@ -44,21 +44,21 @@ const GamePvE: React.FC = () => {
 
 	// on first mount
 	useEffect(() => {
-		const sign1 = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
-		const sign2 = sign1 === 'x' ? 'o' : 'x';
+		const userSign = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
+		const computerSign = userSign === 'x' ? 'o' : 'x';
 		// TODO check how it works  for guest users
-		setState((s) => ({
-			...s,
+		setState((st) => ({
+			...st,
 			user: auth.currentUser,
-			userSign: sign1,
-			computerSign: sign2,
+			userSign: userSign,
+			computerSign: computerSign,
 		}));
 
 		// check if AI is first and make a move if it is
 		setTimeout(() => {
-			if (state.turn === state.computerSign && state.history.length === 1) {
+			if (state.turn === computerSign && state.history.length === 1) {
 				const newHistory = [...state.history];
-				const computerMove = ai(state.computerSign, newHistory[0]);
+				const computerMove = ai(computerSign, newHistory[0]);
 				computerMoveFunc(newHistory, computerMove);
 			}
 		}, 500)
@@ -85,8 +85,8 @@ const GamePvE: React.FC = () => {
 				addDoc(ref, data)
 			}
 
-			return setState((s) => ({
-				...s,
+			return setState((st) => ({
+				...st,
 				winner: 'draw',
 			}))
 		}
@@ -97,7 +97,7 @@ const GamePvE: React.FC = () => {
 
 		const newHistory = [...history];
 		newHistory.push(computerSquares);
-
+		console.log('here')
 		setState((state) => ({
 			...state,
 			turn: state.userSign,
@@ -146,16 +146,14 @@ const GamePvE: React.FC = () => {
 				}
 
 				// end the game
-				return setState((s) => ({
-					...s,
+				return setState((st) => ({
+					...st,
 					winningSquares: win,
 					winner: state.userSign === squares[combo[0]] ? 'win' : 'lose',
 				}));
 			}
 		}
 	}
-
-
 
 	const handleClick = (num: number) => {
 		const current: TGameArray = state.history[state.step];
@@ -182,11 +180,11 @@ const GamePvE: React.FC = () => {
 
 		newHistory.push(playersSquares);
 
-		setState((s) => ({
-			...s,
-			turn: s.computerSign,
+		setState((st) => ({
+			...st,
+			turn: st.computerSign,
 			history: newHistory,
-			step: s.step + 1,
+			step: st.step + 1,
 		}))
 
 		checkForWinner(playersSquares);
@@ -202,8 +200,8 @@ const GamePvE: React.FC = () => {
 		const sign1 = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
 		const sign2 = sign1 === 'x' ? 'o' : 'x';
 
-		setState((s) => ({
-			...s,
+		setState((st) => ({
+			...st,
 			turn: 'x',
 			winner: undefined,
 			userSign: sign1,

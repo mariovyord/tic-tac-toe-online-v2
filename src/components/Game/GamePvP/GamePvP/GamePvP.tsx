@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import GameTable from '../../gameComponents/GameTable';
 import PlayerCard from '../../gameComponents/PlayerCard/PlayerCard';
@@ -10,9 +10,8 @@ import { TGameArray } from '../../../../types/game.types';
 import { serverTimestamp, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { User } from 'firebase/auth';
 import { auth, db } from '../../../../configs/firebase.config';
-import { withRouter } from '../../../../hoc/withRouter';
 import Spinner from '../../../common/Spinner/Spinner';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 interface IState {
 	user: null | User,
@@ -26,77 +25,83 @@ interface IState {
 	redirect: string,
 }
 
-class GamePvP extends Component<any, IState> {
-	constructor(props: any) {
-		super(props);
-		this.state = {
-			user: auth.currentUser,
-			userIndex: 0,
-			game: null,
-			gameId: props.router.params.id,
-			xIndex: 0,
-			winner: undefined,
-			winningSquares: Array(9).fill(false),
-			loading: true,
-			redirect: '',
-		}
-	}
+const GamePvP: React.FC = () => {
+	const params = useParams();
+	const navigate = useNavigate();
 
-	componentDidMount() {
-		this.handleUpdateGame()
-	}
+	const [state, setState] = useState<IState>({
+		user: auth.currentUser,
+		userIndex: 0,
+		game: null,
+		gameId: params.id!,
+		xIndex: 0,
+		winner: undefined,
+		winningSquares: Array(9).fill(false),
+		loading: true,
+		redirect: '',
+	})
 
+	// on mount 
+	useEffect(() => {
+		handleUpdateGame()
+	}, [])
 
-	componentDidUpdate() {
-		// check if the game is draw
-		const isFull = this.state.game.history[this.state.game.step].filter((x: any) => !x);
+	// check game state for draw
+	useEffect(() => {
+		if (state.game) {
+			// check if the game is draw
+			const isFull = state.game.history[state.game.step].filter((x: any) => !x);
 
-		if (isFull.length === 0 && this.state.winner === undefined) {
-			if (this.state.user?.uid === this.state.game.owner) {
-				const data = {
-					owner: this.state.user?.uid,
-					mode: 'pvp',
-					history: JSON.stringify([...this.state.game.history]),
-					playersIds: this.state.game.playersIds,
-					playerDisplayNames: this.state.game.playerDisplayNames,
-					playerSigns: this.state.game.playerSigns,
-					winner: 'draw',
-					createdAt: serverTimestamp(),
+			if (isFull.length === 0 && state.winner === undefined) {
+				if (state.user?.uid === state.game.owner) {
+					const data = {
+						owner: state.user?.uid,
+						mode: 'pvp',
+						history: JSON.stringify([...state.game.history]),
+						playersIds: state.game.playersIds,
+						playerDisplayNames: state.game.playerDisplayNames,
+						playerSigns: state.game.playerSigns,
+						winner: 'draw',
+						createdAt: serverTimestamp(),
+					}
+
+					const ref = collection(db, "games")
+					addDoc(ref, data);
+					deleteGameSession();
 				}
-
-				const ref = collection(db, "games")
-				addDoc(ref, data);
-				this.deleteGameSession();
+				setState((st) => ({
+					...st,
+					winner: 'draw',
+				}))
 			}
-
-			return this.setState({
-				winner: 'draw',
-			})
 		}
+	}, [state.game])
+
+
+	function deleteGameSession() {
+		deleteDoc(doc(db, "activeGames", state.gameId));
 	}
 
-	deleteGameSession() {
-		deleteDoc(doc(db, "activeGames", this.state.gameId));
-	}
-
-	handleUpdateGame() {
-		onSnapshot(doc(db, "activeGames", this.state.gameId), (doc) => {
+	function handleUpdateGame() {
+		onSnapshot(doc(db, "activeGames", state.gameId), (doc) => {
 			const data = doc.data();
-
+			console.log(data)
 			if (data) {
 				const history = JSON.parse(data.history);
-				this.setState({
+				setState((st) => ({
+					...st,
 					game: { ...data, history: history },
 					loading: false,
 					xIndex: data.playerSigns.indexOf('x'),
-					userIndex: data.playersIds.indexOf(this.state.user?.uid),
-				})
-				this.checkForWinner(history[history.length - 1]);
+					userIndex: data.playersIds.indexOf(state.user?.uid),
+				}))
+				checkForWinner(history[history.length - 1]);
 			}
 		});
 	}
 
-	checkForWinner = (squares: []) => {
+	// TODO doesnt end the game for some reason
+	function checkForWinner(squares: []) {
 		const combos = [
 			[0, 1, 2],
 			[3, 4, 5],
@@ -111,120 +116,120 @@ class GamePvP extends Component<any, IState> {
 		for (let combo of combos) {
 			if (!squares[combo[0]] || !squares[combo[1]] || !squares[combo[2]]) {
 			} else if (squares[combo[0]] === squares[combo[1]] && squares[combo[1]] === squares[combo[2]]) {
-				const win = [...this.state.winningSquares];
+				const win = [...state.winningSquares];
 				win[combo[0]] = true;
 				win[combo[1]] = true;
 				win[combo[2]] = true;
 
 				// check if user is not anonymous and save game db
-				if (this.state.user?.uid === this.state.game.owner) {
+				if (state.user?.uid === state.game.owner) {
 					const data = {
-						owner: this.state.user?.uid,
+						owner: state.user?.uid,
 						mode: 'pvp',
-						history: JSON.stringify([...this.state.game.history, squares]),
-						playersIds: this.state.game.playersIds,
-						playerDisplayNames: this.state.game.playerDisplayNames,
-						playerSigns: this.state.game.playerSigns,
+						history: JSON.stringify([...state.game.history, squares]),
+						playersIds: state.game.playersIds,
+						playerDisplayNames: state.game.playerDisplayNames,
+						playerSigns: state.game.playerSigns,
 						winner: squares[combo[0]],
 						createdAt: serverTimestamp(),
 					}
 
 					const ref = collection(db, "games")
 					addDoc(ref, data)
-					this.deleteGameSession();
+					deleteGameSession();
 				}
 
 				// end the game
-				return this.setState({
+				return setState((st) => ({
+					...st,
 					winningSquares: win,
-					winner: this.state.game.playerSigns[this.state.userIndex] === squares[combo[0]] ? 'win' : 'lose',
-				});
+					winner: state.game.playerSigns[state.userIndex] === squares[combo[0]] ? 'win' : 'lose',
+				}));
 			}
 		}
 	}
 
-	handleClick = (num: number) => {
-		const current: TGameArray = this.state.game.history[this.state.game.step];
+	function handleClick(num: number) {
+		const current: TGameArray = state.game.history[state.game.step];
 
 		// TODO check if its user turn
-		if (this.state.winner !== undefined) return;
-		if (this.state.game.turn !== this.state.game.playerSigns[this.state.userIndex] && current[num] !== undefined) return;
+		if (state.winner !== undefined) return;
+		if (state.game.turn !== state.game.playerSigns[state.userIndex] && current[num] !== undefined) return;
 
 		const handleTurn = (): any => {
 			// add user move to array
 			let playersSquares: TGameArray = [...current];
-			playersSquares[num] = this.state.game.playerSigns[this.state.userIndex];
+			playersSquares[num] = state.game.playerSigns[state.userIndex];
 			return [playersSquares];
 		}
 
 		const [playersSquares] = handleTurn();
 
 		// Player makes a move after little delay
-		const newHistory = [...this.state.game.history];
+		const newHistory = [...state.game.history];
 
 		newHistory.push(playersSquares);
-		const ref = doc(db, "activeGames", this.state.game.id);
+		const ref = doc(db, "activeGames", state.game.id);
 		updateDoc(ref, {
 			history: JSON.stringify(newHistory),
-			step: this.state.game.step + 1,
-			turn: this.state.game.turn === 'x' ? 'o' : 'x',
+			step: state.game.step + 1,
+			turn: state.game.turn === 'x' ? 'o' : 'x',
 		})
 			.catch(err => {
 				// TODO ...
 				console.log(err);
 			})
 			.finally(() => {
-				this.setState({
+				setState((st) => ({
+					...st,
 					loading: false,
-				})
+				}))
 			})
 	}
 
-	handleRestartGame = () => {
-		this.props.router.navigate('/game/PvP');
+	function handleRestartGame() {
+		navigate('/game/PvP');
 	}
 
-	render() {
-		if (this.state.loading || this.state.game.playersIds.filter((x: any) => x !== '').length < 2) {
-			return <div className={`${style.container}`}>
-				<div></div>
-				<div>
-					<h2 className={style.waiting}>Waiting for players</h2>
-					<Spinner />
-				</div>
-				<div></div>
+	if (state.loading || state.game.playersIds.filter((x: any) => x !== '').length < 2) {
+		return <div className={`${style.container}`}>
+			<div></div>
+			<div>
+				<h2 className={style.waiting}>Waiting for players</h2>
+				<Spinner />
 			</div>
-		} else if (this.state.redirect !== '') {
-			<Navigate to={this.state.redirect} />
-		} else {
-			return (
-				<div className={`${style.container}`}>
-					<div className={style.player1}>
-						<PlayerCard
-							displayName={this.state.game.playerDisplayNames[this.state.xIndex]}
-							sign={'x'}
-							yourTurn={this.state.game.turn === 'x'} />
-					</div>
-					<div className={style.player2}>
-						<PlayerCard
-							displayName={this.state.game.playerDisplayNames[this.state.xIndex === 0 ? 1 : 0]}
-							sign={'o'}
-							yourTurn={this.state.game.turn === 'o'} />
-					</div>
-					<div className={style.game}>
-						<GameTable
-							winningSquares={this.state.winningSquares}
-							history={this.state.game.history}
-							step={this.state.game.step}
-							handleClick={this.handleClick} />
-						{this.state.winner && <Winner
-							result={this.state.winner}
-							handleRestartGame={this.handleRestartGame.bind(this)} />}
-					</div>
+			<div></div>
+		</div>
+	} else if (state.redirect !== '') {
+		return <Navigate to={state.redirect} />
+	} else {
+		return (
+			<div className={`${style.container}`}>
+				<div className={style.player1}>
+					<PlayerCard
+						displayName={state.game.playerDisplayNames[state.xIndex]}
+						sign={'x'}
+						yourTurn={state.game.turn === 'x'} />
 				</div>
-			)
-		}
+				<div className={style.player2}>
+					<PlayerCard
+						displayName={state.game.playerDisplayNames[state.xIndex === 0 ? 1 : 0]}
+						sign={'o'}
+						yourTurn={state.game.turn === 'o'} />
+				</div>
+				<div className={style.game}>
+					<GameTable
+						winningSquares={state.winningSquares}
+						history={state.game.history}
+						step={state.game.step}
+						handleClick={handleClick} />
+					{state.winner && <Winner
+						result={state.winner}
+						handleRestartGame={handleRestartGame.bind(this)} />}
+				</div>
+			</div>
+		)
 	}
 }
 
-export const GamePvPWithRouter = withRouter(GamePvP);
+export default GamePvP;
