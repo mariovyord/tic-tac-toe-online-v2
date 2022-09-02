@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import ai from '../../../utils/ai/ai';
 
 import GameTable from '../gameComponents/GameTable';
@@ -27,58 +27,56 @@ interface IState {
 	winningSquares: boolean[],
 }
 
-export default class GamePvE extends Component<any, IState> {
+const GamePvE: React.FC = () => {
+	const [state, setState] = useState<IState>({
+		user: null,
+		userSign: 'x',
+		computerData: {
+			displayName: 'AI',
+		},
+		computerSign: 'o',
+		turn: 'x',
+		winner: undefined,
+		history: [Array(9).fill(undefined)],
+		step: 0,
+		winningSquares: Array(9).fill(false),
+	})
 
-	constructor(props: any) {
-		super(props);
-		this.state = {
-			user: null,
-			userSign: 'x',
-			computerData: {
-				displayName: 'AI',
-			},
-			computerSign: 'o',
-			turn: 'x',
-			winner: undefined,
-			history: [Array(9).fill(undefined)],
-			step: 0,
-			winningSquares: Array(9).fill(false),
-		}
-	}
-
-	componentDidMount() {
+	// on first mount
+	useEffect(() => {
 		const sign1 = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
 		const sign2 = sign1 === 'x' ? 'o' : 'x';
 		// TODO check how it works  for guest users
-		this.setState({
+		setState((s) => ({
+			...s,
 			user: auth.currentUser,
 			userSign: sign1,
 			computerSign: sign2,
-		});
+		}));
 
 		// check if AI is first and make a move if it is
 		setTimeout(() => {
-			if (this.state.turn === this.state.computerSign && this.state.history.length === 1) {
-				const newHistory = [...this.state.history];
-				const computerMove = ai(this.state.computerSign, newHistory[0]);
-				this.computerMove(newHistory, computerMove);
+			if (state.turn === state.computerSign && state.history.length === 1) {
+				const newHistory = [...state.history];
+				const computerMove = ai(state.computerSign, newHistory[0]);
+				computerMoveFunc(newHistory, computerMove);
 			}
 		}, 500)
-	}
+	}, [])
 
-	componentDidUpdate() {
+	useEffect(() => {
 		// check if the game is draw
-		const isFull = this.state.history[this.state.step].filter(x => x === undefined);
-		if (isFull.length === 0 && this.state.winner === undefined) {
+		const isFull = state.history[state.step].filter(x => x === undefined);
+		if (isFull.length === 0 && state.winner === undefined) {
 
-			if (this.state.user && this.state.user.isAnonymous === false) {
+			if (state.user && state.user.isAnonymous === false) {
 				const data = {
-					owner: this.state.user.uid,
+					owner: state.user.uid,
 					mode: 'pve',
-					history: JSON.stringify([...this.state.history]),
-					playersIds: [this.state.user.uid, ''],
-					playerDisplayNames: [this.state.user.displayName, 'AI'],
-					playerSigns: [this.state.userSign, this.state.computerSign],
+					history: JSON.stringify([...state.history]),
+					playersIds: [state.user.uid, ''],
+					playerDisplayNames: [state.user.displayName, 'AI'],
+					playerSigns: [state.userSign, state.computerSign],
 					winner: 'draw',
 					createdAt: serverTimestamp(),
 				}
@@ -87,13 +85,30 @@ export default class GamePvE extends Component<any, IState> {
 				addDoc(ref, data)
 			}
 
-			return this.setState({
+			return setState((s) => ({
+				...s,
 				winner: 'draw',
-			})
+			}))
 		}
+	}, [state.history])
+
+	function computerMoveFunc(history: any[][], computerSquares: any) {
+		if (state.winner !== undefined) return;
+
+		const newHistory = [...history];
+		newHistory.push(computerSquares);
+
+		setState((state) => ({
+			...state,
+			turn: state.userSign,
+			history: newHistory,
+			step: state.step + 1,
+		}))
+
+		checkForWinner(computerSquares);
 	}
 
-	checkForWinner = (squares: []) => {
+	function checkForWinner(squares: []) {
 		const combos = [
 			[0, 1, 2],
 			[3, 4, 5],
@@ -108,21 +123,21 @@ export default class GamePvE extends Component<any, IState> {
 		for (let combo of combos) {
 			if (squares[combo[0]] === undefined || squares[combo[1]] === undefined || squares[combo[2]] === undefined) {
 			} else if (squares[combo[0]] === squares[combo[1]] && squares[combo[1]] === squares[combo[2]]) {
-				const win = [...this.state.winningSquares];
+				const win = [...state.winningSquares];
 				win[combo[0]] = true;
 				win[combo[1]] = true;
 				win[combo[2]] = true;
 
 				// check if user is not anonymous and save game db
-				if (this.state.user && this.state.user.isAnonymous === false) {
+				if (state.user && state.user.isAnonymous === false) {
 					const data = {
-						owner: this.state.user.uid,
+						owner: state.user.uid,
 						mode: 'pve',
-						history: JSON.stringify([...this.state.history, squares]),
-						playersIds: [this.state.user.uid, ''],
-						playerDisplayNames: [this.state.user.displayName, 'AI'],
-						playerSigns: [this.state.userSign, this.state.computerSign],
-						winner: this.state.userSign === squares[combo[0]] ? this.state.userSign : this.state.computerSign,
+						history: JSON.stringify([...state.history, squares]),
+						playersIds: [state.user.uid, ''],
+						playerDisplayNames: [state.user.displayName, 'AI'],
+						playerSigns: [state.userSign, state.computerSign],
+						winner: state.userSign === squares[combo[0]] ? state.userSign : state.computerSign,
 						createdAt: serverTimestamp(),
 					}
 
@@ -131,43 +146,31 @@ export default class GamePvE extends Component<any, IState> {
 				}
 
 				// end the game
-				return this.setState({
+				return setState((s) => ({
+					...s,
 					winningSquares: win,
-					winner: this.state.userSign === squares[combo[0]] ? 'win' : 'lose',
-				});
+					winner: state.userSign === squares[combo[0]] ? 'win' : 'lose',
+				}));
 			}
 		}
 	}
 
-	computerMove(history: any[][], computerSquares: any) {
-		if (this.state.winner !== undefined) return;
 
-		const newHistory = [...history];
-		newHistory.push(computerSquares);
 
-		this.setState((state, _) => ({
-			turn: state.userSign,
-			history: newHistory,
-			step: state.step + 1,
-		}))
+	const handleClick = (num: number) => {
+		const current: TGameArray = state.history[state.step];
 
-		this.checkForWinner(computerSquares);
-	}
-
-	handleClick = (num: number) => {
-		const current: TGameArray = this.state.history[this.state.step];
-
-		if (this.state.step !== (this.state.history.length - 1) || this.state.step < 0) return;
-		if (this.state.winner !== undefined) return;
-		if (this.state.turn === this.state.userSign && current[num] !== undefined) return;
-		if (this.state.turn === this.state.computerSign) return;
+		if (state.step !== (state.history.length - 1) || state.step < 0) return;
+		if (state.winner !== undefined) return;
+		if (state.turn === state.userSign && current[num] !== undefined) return;
+		if (state.turn === state.computerSign) return;
 
 		const handleTurn = (): any => {
 			// add user move to array
 			let playersSquares: TGameArray = [...current];
-			playersSquares[num] = this.state.userSign;
+			playersSquares[num] = state.userSign;
 			// add computer move to second array
-			const computerSquares = ai(this.state.computerSign, playersSquares);
+			const computerSquares = ai(state.computerSign, playersSquares);
 
 			return [playersSquares, computerSquares];
 		}
@@ -175,30 +178,32 @@ export default class GamePvE extends Component<any, IState> {
 		const [playersSquares, computerSquares] = handleTurn();
 
 		// Player makes a move after little delay
-		const newHistory = [...this.state.history];
+		const newHistory = [...state.history];
 
 		newHistory.push(playersSquares);
 
-		this.setState((state, _) => ({
-			turn: state.computerSign,
+		setState((s) => ({
+			...s,
+			turn: s.computerSign,
 			history: newHistory,
-			step: state.step + 1,
+			step: s.step + 1,
 		}))
 
-		this.checkForWinner(playersSquares);
+		checkForWinner(playersSquares);
 
 		// AI makes a move after little delay
 		setTimeout(() => {
-			this.computerMove(newHistory, computerSquares);
+			computerMoveFunc(newHistory, computerSquares);
 		}, 500)
 	}
 
-	handleRestartGame = () => {
+	const handleRestartGame = () => {
 		// reset state
 		const sign1 = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
 		const sign2 = sign1 === 'x' ? 'o' : 'x';
 
-		this.setState({
+		setState((s) => ({
+			...s,
 			turn: 'x',
 			winner: undefined,
 			userSign: sign1,
@@ -206,32 +211,33 @@ export default class GamePvE extends Component<any, IState> {
 			history: [Array(9).fill(undefined)],
 			step: 0,
 			winningSquares: Array(9).fill(false),
-		})
+		}))
 
 		// check if AI is first and make a move if it is
 		setTimeout(() => {
-			if (this.state.turn === this.state.computerSign && this.state.history.length === 1) {
-				const newHistory = [...this.state.history];
-				const computerMove = ai(this.state.computerSign, newHistory[0]);
-				this.computerMove(newHistory, computerMove);
+			if (state.turn === state.computerSign && state.history.length === 1) {
+				const newHistory = [...state.history];
+				const computerMove = ai(state.computerSign, newHistory[0]);
+				computerMoveFunc(newHistory, computerMove);
 			}
 		}, 500)
 
 	}
-	render() {
-		return (
-			<div className={`${style.container}`}>
-				<div className={style.player1}>
-					<PlayerCard displayName={this.state.userSign === 'x' ? this.state.user?.displayName : this.state.computerData.displayName} sign={'x'} yourTurn={this.state.turn === 'x'} />
-				</div>
-				<div className={style.player2}>
-					<PlayerCard displayName={this.state.userSign === 'o' ? this.state.user?.displayName : this.state.computerData.displayName} sign={'o'} yourTurn={this.state.turn === 'o'} />
-				</div>
-				<div className={style.game}>
-					<GameTable winningSquares={this.state.winningSquares} history={this.state.history} step={this.state.step} handleClick={this.handleClick} />
-					{this.state.winner && <Winner result={this.state.winner} handleRestartGame={this.handleRestartGame} />}
-				</div>
+
+	return (
+		<div className={`${style.container}`}>
+			<div className={style.player1}>
+				<PlayerCard displayName={state.userSign === 'x' ? state.user?.displayName : state.computerData.displayName} sign={'x'} yourTurn={state.turn === 'x'} />
 			</div>
-		)
-	}
+			<div className={style.player2}>
+				<PlayerCard displayName={state.userSign === 'o' ? state.user?.displayName : state.computerData.displayName} sign={'o'} yourTurn={state.turn === 'o'} />
+			</div>
+			<div className={style.game}>
+				<GameTable winningSquares={state.winningSquares} history={state.history} step={state.step} handleClick={handleClick} />
+				{state.winner && <Winner result={state.winner} handleRestartGame={handleRestartGame} />}
+			</div>
+		</div>
+	)
 }
+
+export default GamePvE;

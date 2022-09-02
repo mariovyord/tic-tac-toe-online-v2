@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import style from './PlayerCard.module.css';
 
 interface Props {
@@ -7,15 +7,15 @@ interface Props {
 	yourTurn: boolean,
 };
 
-export default class PlayerCard extends Component<Props> {
-	render() {
-		return (
-			<div className={style['player-card']}>
-				<h3 className={style['player-name']}>{this.props.displayName?.split(' ')[0] || 'Anonymous'}</h3>
-				<div className={`${style['turn-card']} ${this.props.yourTurn ? style.active : null}`}>
-					<p className={`${style['turn']}`}>{this.props.sign === 'x' ? '✖' : '○'} turn</p>
-				</div>
+const PlayerCard: React.FC<Props> = (props) => {
+	return (
+		<div className={style['player-card']}>
+			<h3 className={style['player-name']}>{props.displayName?.split(' ')[0] || 'Anonymous'}</h3>
+			<div className={`${style['turn-card']} ${props.yourTurn ? style.active : null}`}>
+				<p className={`${style['turn']}`}>{props.sign === 'x' ? '✖' : '○'} turn</p>
 			</div>
-		)
-	}
+		</div>
+	)
 }
+
+export default PlayerCard;

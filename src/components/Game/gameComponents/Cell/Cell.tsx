@@ -1,8 +1,9 @@
+import { TSigns } from '../../../../types/game.types';
 import styles from './Cell.module.css';
 
 interface ICell {
 	cellId: number,
-	current: string[],
+	current: TSigns[],
 	handleClick: Function,
 	winningSquares: boolean[],
 }
