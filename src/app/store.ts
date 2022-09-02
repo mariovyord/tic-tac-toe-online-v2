@@ -7,7 +7,14 @@ export const store = configureStore({
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
-			serializableCheck: false,
+			serializableCheck: {
+				// Ignore these action types
+				ignoredActions: ['auth/login'],
+				// Ignore these field paths in all actions
+				ignoredActionPaths: ['auth.user'],
+				// Ignore these paths in the state
+				ignoredPaths: ['auth.user'],
+			},
 		}),
 });
 
