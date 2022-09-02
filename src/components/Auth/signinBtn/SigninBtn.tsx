@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react';
 import authStyles from '../Auth.module.css';
 
 interface IProps {
@@ -8,15 +8,15 @@ interface IProps {
 	children: JSX.Element,
 }
 
-export default class SigninBtn extends Component<IProps> {
-	render() {
-		return (
-			<button className={`${authStyles['login-btn']} ${this.props.classes} btn`} onClick={this.props.login}>
-				{this.props.children}
-				<div>
-					{this.props.text}
-				</div>
-			</button>
-		)
-	}
+const SigninBtn: React.FC<IProps> = ({ classes, login, text, children }) => {
+	return (
+		<button className={`${authStyles['login-btn']} ${classes} btn`} onClick={login}>
+			{children}
+			<div>
+				{text}
+			</div>
+		</button>
+	)
 }
+
+export default SigninBtn;
