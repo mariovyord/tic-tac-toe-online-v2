@@ -17,7 +17,7 @@ export const store = configureStore({
 				// Ignore these action types
 				ignoredActions: ['auth/login'],
 				// Ignore these field paths in all actions
-				ignoredActionPaths: ['auth.user'],
+				ignoredActionPaths: ['auth.user', 'payload.createdAt', 'review.game.createdAt'],
 				// Ignore these paths in the state
 				ignoredPaths: ['auth.user'],
 			},

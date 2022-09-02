@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { fetchGameAsync, reviewActions, selectReview } from '../../../app/slices/reviewSlice';
 import { getWinner } from '../../../utils/ai/getWinner/getWinner';
+
 import Spinner from '../../common/Spinner/Spinner';
 import GameTable from '../gameComponents/GameTable';
 import History from '../gameComponents/History/History';
@@ -59,7 +60,7 @@ const ReviewGame = () => {
 				</div>
 			</div>
 		)
-	} else {
+	} if (review.status === 'loading') {
 		return (
 			<div className={`${style.container}`}>
 				<div></div>
@@ -67,6 +68,8 @@ const ReviewGame = () => {
 				<div></div>
 			</div>
 		)
+	} else {
+		return <Navigate to="/" />
 	}
 }
 
