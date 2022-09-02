@@ -3,6 +3,7 @@ import authReducer from './slices/authSlice';
 import pvpReducer from './slices/pvpSlice';
 import pveReducer from './slices/pveSlice';
 import reviewReducer from './slices/reviewSlice';
+import profileReducer from './slices/profileSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
 		pvp: pvpReducer,
 		pve: pveReducer,
 		review: reviewReducer,
+		profile: profileReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

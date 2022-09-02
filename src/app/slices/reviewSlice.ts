@@ -3,6 +3,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../configs/firebase.config';
 import { RootState } from '../store';
 
+// TODO Add REDUX
+
 interface IReviewState {
 	game: null | any,
 	step: number,
