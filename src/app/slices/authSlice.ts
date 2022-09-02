@@ -1,14 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { User } from 'firebase/auth';
 import { RootState } from '../store';
 
-const initialState = {
+type TAuth = {
+	user: null | User,
+}
+
+const initialState: TAuth = {
 	user: null,
 };
 
 export const authSlice = createSlice({
 	name: 'auth',
 	initialState,
-	reducers: {}
+	reducers: {
+		login: (state, action: PayloadAction<User>) => {
+			state.user = action.payload;
+		},
+		logout: (state) => {
+			state.user = null;
+		}
+	}
 })
 
 export const authActions = authSlice.actions;

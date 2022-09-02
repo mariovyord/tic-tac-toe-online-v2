@@ -17,47 +17,46 @@ import { ReviewGameWithRouter } from './components/Game/ReviewGame/ReviewGame'
 import Home from './components/Home/Home'
 import NotFound from './components/NotFound/NotFound'
 import Profile from './components/Profile/Profile'
-
-interface IState {
-	authenticated: boolean,
-}
+import { User } from 'firebase/auth';
+import { useAppDispatch } from './app/hooks';
+import { authActions } from './app/slices/authSlice';
 
 const App: React.FC = () => {
-	const [state, setState] = useState<IState>({ authenticated: false })
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		firebaseObserver.subscribe('authStateChanged', (isLoggedIn: any) => {
-			setState({
-				authenticated: isLoggedIn,
-			})
+		firebaseObserver.subscribe('authStateChanged', (user: null | User) => {
+			if (user) {
+				dispatch(authActions.login(user));
+			} else {
+				dispatch(authActions.logout());
+			}
 		});
 		return () => {
 			firebaseObserver.unsubscribe('authStateChanged');
 		}
-	}, [])
+	}, [dispatch])
 
 	return (
 		<div>
-			<Compose components={[NotificationProvider]}>
-				<Routes>
-					<Route path='/signin' element={<Auth authenticated={state.authenticated} />} />
-					<Route path='/privacypolicy' element={<PrivacyPolicy />} />
-					<Route element={<PrivateRoutes authenticated={state.authenticated} />}>
-						<Route element={<CommonLayout />}>
-							<Route path='/' element={<Home />} />
-							<Route path='/profile' element={<Profile />} />
-							<Route path='/game' >
-								<Route path="PvE" element={<GamePvE />} />
-								<Route path="PvP" element={<PvPMenu />} />
-								<Route path="PvP/list" element={<GamesList />} />
-								<Route path="PvP/:id" element={<GamePvP />} />
-								<Route path=":id" element={<ReviewGameWithRouter />} />
-							</Route>
-							<Route path='*' element={<NotFound />} />
+			<Routes>
+				<Route path='/signin' element={<Auth />} />
+				<Route path='/privacypolicy' element={<PrivacyPolicy />} />
+				<Route element={<PrivateRoutes />}>
+					<Route element={<CommonLayout />}>
+						<Route path='/' element={<Home />} />
+						<Route path='/profile' element={<Profile />} />
+						<Route path='/game' >
+							<Route path="PvE" element={<GamePvE />} />
+							<Route path="PvP" element={<PvPMenu />} />
+							<Route path="PvP/list" element={<GamesList />} />
+							<Route path="PvP/:id" element={<GamePvP />} />
+							<Route path=":id" element={<ReviewGameWithRouter />} />
 						</Route>
+						<Route path='*' element={<NotFound />} />
 					</Route>
-				</Routes>
-			</Compose>
+				</Route>
+			</Routes>
 		</div >
 	)
 }

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectAuthEmulator, getAuth, User } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import "firebase/firestore";
 import "firebase/analytics";
@@ -31,11 +31,15 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 
 auth.onAuthStateChanged(function (user) {
-	firebaseObserver.publish("authStateChanged", isLoggedIn())
+	firebaseObserver.publish("authStateChanged", sendUser(user))
 });
 
-export function isLoggedIn() {
-	return Boolean(auth.currentUser)
+export function sendUser(user: null | User) {
+	if (user) {
+		return user;
+	} else {
+		return null;
+	}
 }
 
 // Activate emulators

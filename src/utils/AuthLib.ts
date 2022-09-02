@@ -1,7 +1,6 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, signInAnonymously } from "firebase/auth";
 import { FirebaseApp } from 'firebase/app';
 
-
 export class AuthLib {
 	static handleGoogleLogin(app: FirebaseApp) {
 		const provider = new GoogleAuthProvider();

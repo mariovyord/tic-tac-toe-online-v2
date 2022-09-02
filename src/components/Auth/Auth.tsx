@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { BsPerson } from 'react-icons/bs';
 import styles from './Auth.module.css';
@@ -9,12 +8,12 @@ import SigninBtn from './signinBtn/SigninBtn';
 import { app } from '../../configs/firebase.config';
 import { AuthLib } from '../../utils/AuthLib';
 import { Link, Navigate } from 'react-router-dom';
+import { useAppSelector } from '../../app/hooks';
+import { selectAuth } from '../../app/slices/authSlice';
 
-interface IProps {
-	authenticated: boolean,
-}
+const Auth: React.FC = () => {
+	const user = useAppSelector(selectAuth);
 
-const Auth: React.FC<IProps> = ({ authenticated }) => {
 	const handleGoogleLogin = () => {
 		AuthLib.handleGoogleLogin(app)
 			.catch((err) => {
@@ -31,7 +30,7 @@ const Auth: React.FC<IProps> = ({ authenticated }) => {
 			});
 	}
 
-	if (authenticated === false) {
+	if (user === null) {
 		return (
 			<div className={styles.wrapper}>
 				<div className={styles.welcome}>

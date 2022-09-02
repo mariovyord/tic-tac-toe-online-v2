@@ -1,13 +1,13 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAppSelector } from '../app/hooks';
+import { selectAuth } from '../app/slices/authSlice';
 
-interface IProps {
-	authenticated: boolean,
-}
+export const PrivateRoutes: React.FC = () => {
+	const user = useAppSelector(selectAuth);
 
-export const PrivateRoutes: React.FC<IProps> = ({ authenticated }) => {
 	return (
-		authenticated ? <Outlet /> : <Navigate to='/signin' />
+		user ? <Outlet /> : <Navigate to='/signin' />
 	)
 }
 
