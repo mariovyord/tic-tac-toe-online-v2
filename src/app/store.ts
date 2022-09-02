@@ -1,9 +1,15 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import authReducer from './slices/authSlice';
+import pvpReducer from './slices/pvpSlice';
+import pveReducer from './slices/pveSlice';
+import reviewReducer from './slices/reviewSlice';
 
 export const store = configureStore({
 	reducer: {
 		auth: authReducer,
+		pvp: pvpReducer,
+		pve: pveReducer,
+		review: reviewReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

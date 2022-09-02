@@ -8,8 +8,7 @@ import style from './GamePvP.module.css';
 import { TGameArray } from '../../../../types/game.types';
 
 import { serverTimestamp, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { User } from 'firebase/auth';
-import { auth, db } from '../../../../configs/firebase.config';
+import { db } from '../../../../configs/firebase.config';
 import Spinner from '../../../common/Spinner/Spinner';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../../app/hooks';

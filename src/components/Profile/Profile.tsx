@@ -1,7 +1,6 @@
-import { User } from 'firebase/auth';
 import { collection, getDocs, orderBy, query, where, DocumentData, limitToLast } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
-import { auth, db } from '../../configs/firebase.config';
+import { db } from '../../configs/firebase.config';
 import styles from './Profile.module.css';
 import Table from './table/Table';
 import Spinner from '../common/Spinner/Spinner';
