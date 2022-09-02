@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { Link, Navigate } from 'react-router-dom';
 import { IoIosLogIn } from 'react-icons/io';
 import { IoIosCheckboxOutline } from 'react-icons/io';
-import { auth, db } from '../../../../configs/firebase.config';
+import { db } from '../../../../configs/firebase.config';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import Spinner from '../../../common/Spinner/Spinner';
+import { useAppSelector } from '../../../../app/hooks';
+import { selectAuth } from '../../../../app/slices/authSlice';
 
 interface IState {
 	gameId: string,
@@ -17,13 +19,14 @@ export const PvPMenu: React.FC = () => {
 		loading: false,
 	})
 
+	const user = useAppSelector(selectAuth);
+
 	const handleCreateGame = () => {
 		setState((st) => ({
 			...st,
 			loading: true,
 		}))
 
-		const user = auth.currentUser
 
 		const sign1 = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
 		const sign2 = sign1 === 'x' ? 'o' : 'x';

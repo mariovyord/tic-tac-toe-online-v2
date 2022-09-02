@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ai from '../../../utils/ai/ai';
 
 import GameTable from '../gameComponents/GameTable';
@@ -9,12 +9,12 @@ import style from './GamePvE.module.css';
 import { TGameArray, THistoryArray } from '../../../types/game.types';
 
 import { serverTimestamp, collection, addDoc } from "firebase/firestore";
-import { User } from 'firebase/auth';
-import { auth, db } from '../../../configs/firebase.config';
+import { db } from '../../../configs/firebase.config';
+import { useAppSelector } from '../../../app/hooks';
+import { selectAuth } from '../../../app/slices/authSlice';
 
 
 interface IState {
-	user: null | User,
 	userSign: 'x' | 'o',
 	computerData: {
 		displayName: string,
@@ -29,7 +29,6 @@ interface IState {
 
 const GamePvE: React.FC = () => {
 	const [state, setState] = useState<IState>({
-		user: null,
 		userSign: 'x',
 		computerData: {
 			displayName: 'AI',
@@ -42,6 +41,8 @@ const GamePvE: React.FC = () => {
 		winningSquares: Array(9).fill(false),
 	})
 
+	const user = useAppSelector(selectAuth);
+
 	// on first mount
 	useEffect(() => {
 		const userSign = Math.floor((Math.random() * 2)) >= 0.5 ? 'x' : 'o';
@@ -49,7 +50,6 @@ const GamePvE: React.FC = () => {
 		// TODO check how it works  for guest users
 		setState((st) => ({
 			...st,
-			user: auth.currentUser,
 			userSign: userSign,
 			computerSign: computerSign,
 		}));
@@ -69,13 +69,13 @@ const GamePvE: React.FC = () => {
 		const isFull = state.history[state.step].filter(x => x === undefined);
 		if (isFull.length === 0 && state.winner === undefined) {
 
-			if (state.user && state.user.isAnonymous === false) {
+			if (user && user.isAnonymous === false) {
 				const data = {
-					owner: state.user.uid,
+					owner: user.uid,
 					mode: 'pve',
 					history: JSON.stringify([...state.history]),
-					playersIds: [state.user.uid, ''],
-					playerDisplayNames: [state.user.displayName, 'AI'],
+					playersIds: [user.uid, ''],
+					playerDisplayNames: [user.displayName, 'AI'],
 					playerSigns: [state.userSign, state.computerSign],
 					winner: 'draw',
 					createdAt: serverTimestamp(),
@@ -129,13 +129,13 @@ const GamePvE: React.FC = () => {
 				win[combo[2]] = true;
 
 				// check if user is not anonymous and save game db
-				if (state.user && state.user.isAnonymous === false) {
+				if (user && user.isAnonymous === false) {
 					const data = {
-						owner: state.user.uid,
+						owner: user.uid,
 						mode: 'pve',
 						history: JSON.stringify([...state.history, squares]),
-						playersIds: [state.user.uid, ''],
-						playerDisplayNames: [state.user.displayName, 'AI'],
+						playersIds: [user.uid, ''],
+						playerDisplayNames: [user.displayName, 'AI'],
 						playerSigns: [state.userSign, state.computerSign],
 						winner: state.userSign === squares[combo[0]] ? state.userSign : state.computerSign,
 						createdAt: serverTimestamp(),
@@ -225,10 +225,10 @@ const GamePvE: React.FC = () => {
 	return (
 		<div className={`${style.container}`}>
 			<div className={style.player1}>
-				<PlayerCard displayName={state.userSign === 'x' ? state.user?.displayName : state.computerData.displayName} sign={'x'} yourTurn={state.turn === 'x'} />
+				<PlayerCard displayName={state.userSign === 'x' ? user?.displayName : state.computerData.displayName} sign={'x'} yourTurn={state.turn === 'x'} />
 			</div>
 			<div className={style.player2}>
-				<PlayerCard displayName={state.userSign === 'o' ? state.user?.displayName : state.computerData.displayName} sign={'o'} yourTurn={state.turn === 'o'} />
+				<PlayerCard displayName={state.userSign === 'o' ? user?.displayName : state.computerData.displayName} sign={'o'} yourTurn={state.turn === 'o'} />
 			</div>
 			<div className={style.game}>
 				<GameTable winningSquares={state.winningSquares} history={state.history} step={state.step} handleClick={handleClick} />

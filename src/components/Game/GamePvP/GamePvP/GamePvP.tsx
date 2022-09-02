@@ -12,9 +12,10 @@ import { User } from 'firebase/auth';
 import { auth, db } from '../../../../configs/firebase.config';
 import Spinner from '../../../common/Spinner/Spinner';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useAppSelector } from '../../../../app/hooks';
+import { selectAuth } from '../../../../app/slices/authSlice';
 
 interface IState {
-	user: null | User,
 	userIndex: 0 | 1,
 	game: null | any,
 	gameId: string,
@@ -30,7 +31,6 @@ const GamePvP: React.FC = () => {
 	const navigate = useNavigate();
 
 	const [state, setState] = useState<IState>({
-		user: auth.currentUser,
 		userIndex: 0,
 		game: null,
 		gameId: params.id!,
@@ -40,6 +40,8 @@ const GamePvP: React.FC = () => {
 		loading: true,
 		redirect: '',
 	})
+
+	const user = useAppSelector(selectAuth);
 
 	// on mount 
 	useEffect(() => {
@@ -53,9 +55,9 @@ const GamePvP: React.FC = () => {
 			const isFull = state.game.history[state.game.step].filter((x: any) => !x);
 
 			if (isFull.length === 0 && state.winner === undefined) {
-				if (state.user?.uid === state.game.owner) {
+				if (user?.uid === state.game.owner) {
 					const data = {
-						owner: state.user?.uid,
+						owner: user?.uid,
 						mode: 'pvp',
 						history: JSON.stringify([...state.game.history]),
 						playersIds: state.game.playersIds,
@@ -93,7 +95,7 @@ const GamePvP: React.FC = () => {
 					game: { ...data, history: history },
 					loading: false,
 					xIndex: data.playerSigns.indexOf('x'),
-					userIndex: data.playersIds.indexOf(state.user?.uid),
+					userIndex: data.playersIds.indexOf(user?.uid),
 				}))
 				checkForWinner(history[history.length - 1]);
 			}
@@ -122,9 +124,9 @@ const GamePvP: React.FC = () => {
 				win[combo[2]] = true;
 
 				// check if user is not anonymous and save game db
-				if (state.user?.uid === state.game.owner) {
+				if (user?.uid === state.game.owner) {
 					const data = {
-						owner: state.user?.uid,
+						owner: user?.uid,
 						mode: 'pvp',
 						history: JSON.stringify([...state.game.history, squares]),
 						playersIds: state.game.playersIds,
