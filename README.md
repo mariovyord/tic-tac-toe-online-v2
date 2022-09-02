@@ -9,6 +9,7 @@ https://tic-tac-toe-online-11df9.web.app/
 
 ## **Tech stack**
 - [React](https://reactjs.org/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Firebase](https://firebase.google.com/)
 - [Jest](https://jestjs.io/) + [Testing Library](https://testing-library.com/)
