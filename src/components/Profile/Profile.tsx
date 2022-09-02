@@ -74,7 +74,7 @@ const Profile: React.FC = () => {
 
 				})
 		}
-	})
+	}, [user]);
 
 	const UserProfile = () => <div className={styles.wrapper}>
 		<div className={styles.profile}>
