@@ -97,7 +97,6 @@ const GamePvE: React.FC = () => {
 
 		const newHistory = [...history];
 		newHistory.push(computerSquares);
-		console.log('here')
 		setState((state) => ({
 			...state,
 			turn: state.userSign,

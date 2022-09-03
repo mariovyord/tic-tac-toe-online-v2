@@ -3,8 +3,6 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../configs/firebase.config';
 import { RootState } from '../store';
 
-// TODO Add REDUX
-
 interface IReviewState {
 	game: null | any,
 	step: number,
@@ -25,7 +23,14 @@ export const fetchGameAsync = createAsyncThunk(
 		const docRef = doc(db, "games", gameId!);
 
 		return getDoc(docRef)
-			.then((docs) => docs.data())
+			.then((docs) => {
+				const data = docs.data()
+				if (data) {
+					data.createdAt = data.createdAt.toDate().toISOString();
+				}
+
+				return data;
+			})
 	}
 );
 
