@@ -9,9 +9,14 @@ interface IState {
 	game: null | IGame,
 	gameId: string,
 	xIndex: 0 | 1,
-	winner: undefined | 'win' | 'lose' | 'draw',
+	winner: undefined | 'x' | 'o' | 'draw',
 	winningSquares: boolean[],
 	status: 'loading' | 'idle' | 'failed',
+}
+
+interface IEndGame {
+	winner: 'x' | 'o' | 'draw',
+	winningSquares: boolean[],
 }
 
 const initialState: IState = {
@@ -21,7 +26,7 @@ const initialState: IState = {
 	xIndex: 0,
 	winner: undefined,
 	winningSquares: Array(9).fill(false),
-	status: 'idle',
+	status: 'loading',
 }
 
 export const createGame = createAsyncThunk(
@@ -47,9 +52,17 @@ export const pvpSlice = createSlice({
 	initialState,
 	reducers: {
 		updateGameState: (state, action: PayloadAction<IState>) => {
-			console.log(action.payload);
-
-			return state = action.payload;
+			return action.payload;
+		},
+		endGame: (state, action: PayloadAction<IEndGame>) => {
+			return {
+				...state,
+				winner: action.payload.winner,
+				winningSquares: action.payload.winningSquares,
+			};
+		},
+		resetGame: () => {
+			return initialState;
 		}
 	},
 });
