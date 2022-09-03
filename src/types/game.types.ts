@@ -12,4 +12,6 @@ export interface IGame {
 	playerSigns: ['x' | 'o', 'x' | 'o'],
 	winner: 'x' | 'o' | 'draw',
 	createdAt: string,
+	step: number,
+	turn: 'x' | 'o',
 }

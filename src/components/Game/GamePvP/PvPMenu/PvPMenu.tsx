@@ -7,6 +7,7 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import Spinner from '../../../common/Spinner/Spinner';
 import { useAppSelector } from '../../../../app/hooks';
 import { selectAuth } from '../../../../app/slices/authSlice';
+import { IGame } from '../../../../types/game.types';
 
 interface IState {
 	gameId: string,

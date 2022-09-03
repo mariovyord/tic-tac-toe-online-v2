@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Navigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { fetchGameAsync, reviewActions, selectReview } from '../../../app/slices/reviewSlice';
-import { getWinner } from '../../../utils/ai/getWinner/getWinner';
+import { getWinner } from '../../../utils/getWinner/getWinner';
 
 import Spinner from '../../common/Spinner/Spinner';
 import GameTable from '../gameComponents/GameTable';
