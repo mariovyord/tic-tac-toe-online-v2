@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { collection, DocumentData, getDocs, limitToLast, orderBy, query, where } from 'firebase/firestore';
+import { collection, getDocs, limitToLast, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../configs/firebase.config';
 import { RootState } from '../store';
 

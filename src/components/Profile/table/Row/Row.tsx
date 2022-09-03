@@ -1,7 +1,7 @@
 import { DocumentData } from 'firebase/firestore'
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import { toTitleCase } from '../../../../utils/stringUtils';
+import { toTitleCase } from '../../../../utils/utils';
 import styles from './Row.module.css';
 
 interface IProps {

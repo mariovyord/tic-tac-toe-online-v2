@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export const toTitleCase = (str: string) => {
 	return str.replace(
 		/\w\S*/g,
@@ -17,4 +19,8 @@ export const spaceToDashAndLowerCase = (str: string) => {
 			}
 		)
 		.toLowerCase();
+}
+
+export const firebaseDateToString = (date: Timestamp) => {
+	return date.toDate().toISOString();
 }
