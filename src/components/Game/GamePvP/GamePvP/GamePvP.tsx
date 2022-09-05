@@ -40,10 +40,6 @@ const GamePvP: React.FC = () => {
 			winner: winner,
 			finished: true,
 		})
-			.then(() => {
-				console.log('it works');
-
-			})
 			.catch(err => {
 				// TODO ...
 				console.log(err);
@@ -57,7 +53,6 @@ const GamePvP: React.FC = () => {
 			if (data && user) {
 				const history = JSON.parse(data.history);
 
-				console.log('params.id', gameId);
 				dispatch(pvpActions.updateGameState(
 					{
 						...gameData,

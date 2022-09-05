@@ -102,8 +102,6 @@ const GamePvE: React.FC = () => {
 			playersSquares[num] = userSign;
 			// add computer move to second array
 			const computerSquares = ai(computerSign, playersSquares);
-			console.log('player', playersSquares);
-			console.log('computerSquares', computerSquares);
 
 			return [playersSquares, computerSquares];
 		}
