@@ -41,14 +41,14 @@ const ReviewGame = () => {
 			<div className={`${style.container}`}>
 				<div className={style.player1}>
 					<PlayerCard
-						displayName={review.game.playerDisplayNames[0]}
+						displayName={review.game.playerDisplayNames[review.xIndex]}
 						sign={'x'}
 						yourTurn={review.step % 2 === 1 ? true : false}
 					/>
 				</div>
 				<div className={style.player2}>
 					<PlayerCard
-						displayName={review.game.playerDisplayNames[1]}
+						displayName={review.game.playerDisplayNames[review.xIndex === 0 ? 1 : 0]}
 						sign={'o'}
 						yourTurn={review.step % 2 === 0 ? true : false}
 					/>

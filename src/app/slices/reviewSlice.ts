@@ -6,6 +6,7 @@ import { RootState } from '../store';
 interface IReviewState {
 	game: null | any,
 	step: number,
+	xIndex: 0 | 1,
 	winningSquares: boolean[],
 	status: 'loading' | 'idle' | 'failed',
 }
@@ -13,6 +14,7 @@ interface IReviewState {
 const initialState: IReviewState = {
 	game: null,
 	step: 1,
+	xIndex: 0,
 	winningSquares: Array(9).fill(false),
 	status: 'loading',
 }
@@ -52,6 +54,7 @@ export const reviewSlice = createSlice({
 			})
 			.addCase(fetchGameAsync.fulfilled, (state, action) => {
 				state.game = action.payload;
+				state.xIndex = action.payload!.playerSigns.indexOf('x');
 				state.status = 'idle';
 			})
 			.addCase(fetchGameAsync.rejected, (state) => {
