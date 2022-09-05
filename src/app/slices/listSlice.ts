@@ -17,10 +17,11 @@ const initialState: IState = {
 export const getList = createAsyncThunk(
 	'list/loadGamesList',
 	async () => {
-		const ref = collection(db, 'activeGames');
+		const ref = collection(db, 'games');
 		const q = query(ref,
 			where("mode", "==", "pvp"),
 			where("open", "==", true),
+			where("finished", "==", false),
 			orderBy("createdAt"),
 		);
 

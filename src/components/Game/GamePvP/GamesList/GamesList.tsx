@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import { selectAuth } from '../../../../app/slices/authSlice';
 import { getList, selectList } from '../../../../app/slices/listSlice';
 import { db } from '../../../../configs/firebase.config';
-import { IGame } from '../../../../types/game.types';
+import { IParsedGame } from '../../../../types/game.types';
 import Spinner from '../../../common/Spinner/Spinner';
 import styles from './GamesList.module.css';
 
@@ -19,7 +19,7 @@ const GamesList: React.FC = () => {
 		dispatch(getList());
 	}, [dispatch])
 
-	const handleJoinGame = (game: IGame) => {
+	const handleJoinGame = (game: IParsedGame) => {
 		if (user) {
 			const updatedProperties = {
 				open: false,
@@ -27,7 +27,7 @@ const GamesList: React.FC = () => {
 				playersIds: [game.playersIds[0], user.uid],
 			}
 
-			const ref = doc(db, "activeGames", game.id);
+			const ref = doc(db, "games", game.id);
 			updateDoc(ref, updatedProperties)
 				.then(() => {
 					navigate(`/game/PvP/${game.id}`);
@@ -56,7 +56,7 @@ const GamesList: React.FC = () => {
 						return <tr key={game.id} className={styles.row}>
 							<td className={styles.td}>{game.createdAt.split('T').join(', ').slice(0, -5)}</td>
 							<td className={styles.td}>{game.playerDisplayNames[0]}</td>
-							<td className={`${styles.td} ${styles.join}`} onClick={() => handleJoinGame(game as IGame)}>Join</td>
+							<td className={`${styles.td} ${styles.join}`} onClick={() => handleJoinGame(game as IParsedGame)}>Join</td>
 						</tr>
 					})}
 				</tbody>

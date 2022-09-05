@@ -1,4 +1,4 @@
-export const getWinner = (squares: []): [null | 'x' | 'o', boolean[]] => {
+export const getWinner = (squares: []): [null | 'x' | 'o' | 'draw', boolean[]] => {
 	const winningCombos = [
 		[0, 1, 2],
 		[3, 4, 5],
@@ -21,5 +21,12 @@ export const getWinner = (squares: []): [null | 'x' | 'o', boolean[]] => {
 			return [squares[combo[0]], winnerPattern];
 		}
 	}
+
+	const isFull = squares.filter((x: any) => !x);
+
+	if (isFull.length === 0) {
+		return ['draw', Array(9).fill(false)]
+	}
+
 	return [null, Array(9).fill(false)];
 }

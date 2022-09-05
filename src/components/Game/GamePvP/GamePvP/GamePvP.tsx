@@ -5,9 +5,9 @@ import PlayerCard from '../../gameComponents/PlayerCard/PlayerCard';
 import Winner from '../../gameComponents/Winner/Winner';
 
 import style from './GamePvP.module.css';
-import { IGame, TGameArray } from '../../../../types/game.types';
+import { IParsedGame, TGameArray } from '../../../../types/game.types';
 
-import { serverTimestamp, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { db } from '../../../../configs/firebase.config';
 import Spinner from '../../../common/Spinner/Spinner';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -20,7 +20,7 @@ import { firebaseDateToString } from '../../../../utils/utils';
 // TODO Add error handling 
 
 const GamePvP: React.FC = () => {
-	const params = useParams();
+	const { id: gameId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const gameData = useAppSelector(selectPvP);
@@ -31,64 +31,41 @@ const GamePvP: React.FC = () => {
 		updateGameState()
 	}, []);
 
-	// check game state for draw
-	useEffect(() => {
-		// check if the game is draw
-		if (gameData.game) {
-			const isFull = gameData.game.history[gameData.game.step].filter((x: any) => !x);
-
-			if (isFull.length === 0 && gameData.winner === undefined) {
-				if (user?.uid === gameData.game.owner) {
-					dispatch(pvpActions.endGame({
-						winner: 'draw',
-						winningSquares: Array(9).fill(false)
-					}))
-					saveGameToDb('draw');
-				}
-			}
-		}
-	}, [])
-
 	function saveGameToDb(winner: 'x' | 'o' | 'draw') {
-		if (gameData.game) {
-			const data = {
-				owner: user?.uid,
-				mode: 'pvp',
-				history: JSON.stringify([...gameData.game.history]),
-				playersIds: gameData.game.playersIds,
-				playerDisplayNames: gameData.game.playerDisplayNames,
-				playerSigns: gameData.game.playerSigns,
-				winner: winner,
-				createdAt: serverTimestamp(),
-			}
 
-			const ref = collection(db, "games")
-			addDoc(ref, data);
-			deleteGameSession();
+		const ref = doc(db, "games", gameId as string);
 
-			// TODO Clear redux game state
-		}
-	}
+		updateDoc(ref, {
+			winner: winner,
+			finished: true,
+		})
+			.then(() => {
+				console.log('it works');
 
-	function deleteGameSession() {
-		deleteDoc(doc(db, "activeGames", gameData.gameId));
+			})
+			.catch(err => {
+				// TODO ...
+				console.log(err);
+			})
 	}
 
 	function updateGameState() {
-		onSnapshot(doc(db, "activeGames", params.id as string), (doc) => {
+
+		onSnapshot(doc(db, "games", gameId as string), (doc) => {
 			const data = doc.data();
 			if (data && user) {
 				const history = JSON.parse(data.history);
 
+				console.log('params.id', gameId);
 				dispatch(pvpActions.updateGameState(
 					{
 						...gameData,
 						game: {
-							...data as IGame,
+							...data as IParsedGame,
 							history: history,
 							createdAt: firebaseDateToString(data.createdAt)
 						},
-						gameId: params.id as string,
+						gameId: gameId as string,
 						xIndex: data.playerSigns.indexOf('x'),
 						userIndex: data.playersIds.indexOf(user.uid),
 						status: 'idle'
@@ -102,11 +79,12 @@ const GamePvP: React.FC = () => {
 
 	function checkForWinner(squares: []) {
 		const [winner, pattern] = getWinner(squares);
+
 		if (winner) {
 			dispatch(pvpActions.endGame({
-				winner: winner,
 				winningSquares: pattern
 			}))
+
 			saveGameToDb(winner);
 		}
 	}
@@ -115,8 +93,8 @@ const GamePvP: React.FC = () => {
 		if (gameData.game) {
 			const current: TGameArray = gameData.game.history[gameData.game.step];
 
-			if (gameData.winner !== undefined) return;
-			if (gameData.game.turn !== gameData.game.playerSigns[gameData.userIndex] || current[num] !== null) return;
+			if (gameData.game.winner) return;
+			if (gameData.game.turn !== gameData.game.playerSigns[gameData.userIndex] || current[num]) return;
 
 			const playersSquares = (function () {
 				let playersSquares: TGameArray = [...current];
@@ -127,7 +105,7 @@ const GamePvP: React.FC = () => {
 			const newHistory = [...gameData.game.history];
 
 			newHistory.push(playersSquares);
-			const ref = doc(db, "activeGames", gameData.gameId);
+			const ref = doc(db, "games", gameData.gameId);
 
 			updateDoc(ref, {
 				history: JSON.stringify(newHistory),
@@ -175,10 +153,10 @@ const GamePvP: React.FC = () => {
 						history={gameData.game.history}
 						step={gameData.game.step}
 						handleClick={handleClick} />
-					{gameData.winner && <Winner
+					{gameData.game.winner && <Winner
 						result={(function () {
-							if (gameData.winner === 'draw') return 'draw';
-							if (gameData.winner === gameData.game.playerSigns[gameData.userIndex]) return 'win';
+							if (gameData.game.winner === 'draw') return 'draw';
+							if (gameData.game.winner === gameData.game.playerSigns[gameData.userIndex]) return 'win';
 							return 'lose';
 						})()}
 						handleRestartGame={handleRestartGame.bind(this)} />}
