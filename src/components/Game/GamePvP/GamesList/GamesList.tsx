@@ -27,7 +27,7 @@ const GamesList: React.FC = () => {
 				playersIds: [game.playersIds[0], user.uid],
 			}
 
-			const ref = doc(db, "games", game.id);
+			const ref = doc(db, "games", game.id as string);
 			updateDoc(ref, updatedProperties)
 				.then(() => {
 					navigate(`/game/PvP/${game.id}`);

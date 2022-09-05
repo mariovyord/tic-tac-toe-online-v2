@@ -2,14 +2,14 @@ import ai, { TGameArray } from './ai';
 
 const arrayWithSixEmpty: TGameArray = [
 	'x', // 0
-	undefined, // 1
-	undefined, // 2
-	undefined, // 3
+	null, // 1
+	null, // 2
+	null, // 3
 	'o', // 4
-	undefined, // 5
-	undefined, // 6
-	undefined, // 7
-	undefined // 8
+	null, // 5
+	null, // 6
+	null, // 7
+	null // 8
 ]
 
 const arrayWithTwoEmpty: TGameArray = [
@@ -19,9 +19,9 @@ const arrayWithTwoEmpty: TGameArray = [
 	'o', // 3
 	'o', // 4
 	'x', // 5
-	undefined, // 6
+	null, // 6
 	'x', // 7
-	undefined // 8
+	null // 8
 ]
 
 const arrayWithOneEmpty: TGameArray = [
@@ -33,17 +33,17 @@ const arrayWithOneEmpty: TGameArray = [
 	'x', // 5
 	'o', // 6
 	'x', // 7
-	undefined // 8
+	null // 8
 ]
 
-const arrayFullyEmpty: TGameArray = new Array(9).fill(undefined);
+const arrayFullyEmpty: TGameArray = new Array(9).fill(null);
 
 describe('ai moves function', () => {
 	test('ai func should make any move with x', () => {
 		const resArray = ai('x', arrayWithSixEmpty);
 		const Xs: number = resArray.filter(x => x === 'x').length;
 		const Os: number = resArray.filter(x => x === 'o').length;
-		const empty: number = resArray.filter(x => x === undefined).length;
+		const empty: number = resArray.filter(x => x === null).length;
 
 		expect(Xs).toBe(2);
 		expect(Os).toBe(1);
@@ -54,7 +54,7 @@ describe('ai moves function', () => {
 		const resArray = ai('o', arrayWithSixEmpty);
 		const Xs: number = resArray.filter(x => x === 'x').length;
 		const Os: number = resArray.filter(x => x === 'o').length;
-		const empty: number = resArray.filter(x => x === undefined).length;
+		const empty: number = resArray.filter(x => x === null).length;
 
 		expect(Xs).toBe(1);
 		expect(Os).toBe(2);
@@ -65,7 +65,7 @@ describe('ai moves function', () => {
 		const resArray = ai('x', arrayWithOneEmpty);
 		const Xs: number = resArray.filter(x => x === 'x').length;
 		const Os: number = resArray.filter(x => x === 'o').length;
-		const empty: number = resArray.filter(x => x === undefined).length;
+		const empty: number = resArray.filter(x => x === null).length;
 
 		expect(Xs).toBe(5);
 		expect(Os).toBe(4);
@@ -76,7 +76,7 @@ describe('ai moves function', () => {
 		const resArray = ai('o', arrayWithOneEmpty);
 		const Xs: number = resArray.filter(x => x === 'x').length;
 		const Os: number = resArray.filter(x => x === 'o').length;
-		const empty: number = resArray.filter(x => x === undefined).length;
+		const empty: number = resArray.filter(x => x === null).length;
 
 		expect(Xs).toBe(4);
 		expect(Os).toBe(5);
@@ -88,7 +88,7 @@ describe('ai moves function', () => {
 		const secondPhase = ai('x', firstPhase);
 		const Xs: number = secondPhase.filter(x => x === 'x').length;
 		const Os: number = secondPhase.filter(x => x === 'o').length;
-		const empty: number = secondPhase.filter(x => x === undefined).length;
+		const empty: number = secondPhase.filter(x => x === null).length;
 
 		expect(Xs).toBe(5);
 		expect(Os).toBe(4);
@@ -114,7 +114,7 @@ describe('ai moves function', () => {
 
 		const Xs: number = arr.filter(x => x === 'x').length;
 		const Os: number = arr.filter(x => x === 'o').length;
-		const empty: number = arr.filter(x => x === undefined).length;
+		const empty: number = arr.filter(x => x === null).length;
 
 		expect(Xs).toBe(5);
 		expect(Os).toBe(4);

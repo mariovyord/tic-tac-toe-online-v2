@@ -2,7 +2,7 @@ import NewGameButton from '../NewGamebutton/NewGameButton';
 import style from './Winner.module.css';
 
 interface IWinner {
-	result: 'win' | 'lose' | 'draw';
+	result: 'win' | 'lose' | 'draw' | null | undefined;
 	handleRestartGame: Function,
 }
 

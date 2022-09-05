@@ -18,7 +18,7 @@ interface IGame {
 }
 
 export interface IParsedGame extends IGame {
-	id: string,
+	id?: string,
 	history: THistoryArray,
 	createdAt: string,
 }

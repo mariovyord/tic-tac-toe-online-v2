@@ -8,7 +8,7 @@ const ai = (sign: TSigns, gameArray: any[]): TGameArray => {
 
 	const randomFreeIndex = getRandom(arr
 		.map((sq, i) => {
-			if (sq === undefined) {
+			if (sq === null) {
 				return i
 			} else {
 				return sq
