@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { doc, DocumentData, updateDoc } from "firebase/firestore";
-import { db } from "../../configs/firebase.config";
-import { IParsedGame, THistoryArray } from "../../types/game.types";
+import { IParsedGame } from "../../types/game.types";
 import { RootState } from "../store";
 
 interface IState {

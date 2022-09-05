@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 import GameTable from '../../gameComponents/GameTable';
 import PlayerCard from '../../gameComponents/PlayerCard/PlayerCard';
@@ -29,6 +29,7 @@ const GamePvP: React.FC = () => {
 	// on mount 
 	useEffect(() => {
 		updateGameState()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	function saveGameToDb(winner: 'x' | 'o' | 'draw') {
